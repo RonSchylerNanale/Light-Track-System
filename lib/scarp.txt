@@ -1,0 +1,271 @@
+def signup_command():
+    signup_window=Toplevel(window)
+    signup_window.title("Sign Up")
+    signup_window.geometry('360x640')
+    signup_window.configure(bg = "#c19a6b")
+    signup_window.resizable(False,False)
+        
+    
+    # Establish a connection to the MySQL database
+    def connect_to_database():
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port = 3306
+        )
+        return conn
+
+    # Function to sign up a user
+    def signup():
+        username = user.get()
+        password = code.get()
+        confirm_password = confirm_code.get()
+
+        if password == confirm_password:
+            try:
+                conn = connect_to_database()
+                cursor = conn.cursor()
+
+                cursor.execute("""
+                CREATE TABLE IF NOT EXISTS accounts (
+                    id INTEGER PRIMARY KEY,
+                    username VARCHAR(45) NOT NULL,
+                    password VARCHAR(45) NOT NULL
+
+                )
+                """)
+                # Check if the username already exists
+                query = "SELECT * FROM users WHERE username = %s"
+                cursor.execute(query, (username,))
+                existing_user = cursor.fetchone()
+
+                if existing_user:
+                    messagebox.showerror('Invalid', 'Username already exists')
+                else:
+                    # Insert the new user into the database
+                    insert_query = "INSERT INTO users (username, password) VALUES (%s, %s)"
+                    cursor.execute(insert_query, (username, password))
+                    conn.commit()
+
+                    messagebox.showinfo('Signup', 'Sign Up Successfully')
+                    signup_window.destroy()
+
+            except mysql.connector.Error as err:
+                messagebox.showerror('Error', f"Error: {err}")
+
+            finally:
+                if conn.is_connected():
+                    cursor.close()
+                    conn.close()
+        else:
+            messagebox.showerror('Invalid', "Passwords do not match")
+
+    # Function to close the window
+    def sign():
+        signup_window.destroy()
+
+    """
+        if username=='admin' and password=='password': 
+            screen=Toplevel(window)
+            screen.title("App")
+            screen.geometry('360x640')
+            screen.config(bg = "#c19a6b")
+
+            Label(screen,text="Welcome to Light Track System", bg = "#c19a6b", font=("Microsoft YaHei UI Light", 23, 'bold')).pack(expand=True)
+
+            screen.mainloop()
+        
+        elif username!='admin' and password!='password':
+            messagebox.showerror("Invalid Credentials", "Please enter correct username and password")
+
+        elif password!='password':
+            messagebox.showerror("Invalid Credentials", "Please enter correct password")
+
+        elif username!='admin':
+            messagebox.showerror("Invalid Credentials", "Please enter correct username")
+    """
+
+    lbl = Label(signup_window, text = "Username", font = ("Arial", 10)).place(x=70,y=400)
+
+    lbl = Label(signup_window, text = "Password", font = ("Arial", 10)).place(x=70,y=450)
+
+    img = PhotoImage(file = 'images/login_logo.png')
+    Label(signup_window, image=img, bg="#c19a6b", font = ("Arial",)).place(x=118,y=50)
+
+    frame=Frame(signup_window, width=350, height=350, bg="#c19a6b")
+    frame.place(x=5, y=250)
+
+    heading=Label(signup_window, text = 'Sign Up', fg = 'white', bg='#c19a6b', font=("Microsoft YaHei UI Light", 23, 'bold'))
+    heading.place(x=125, y = 300)
+
+    ################################################################
+    def on_enter(e):
+        user.delete(0, 'end')
+
+    def on_leave(e):
+        name=user.get()
+        if name=='':
+            user.insert(0, 'Username')
+
+    user = Entry(frame, width=15, fg = 'white', bg = "#c19a6b", border=0, font=("Microsoft YaHei UI Light", 12))
+    user.place(x=105, y = 170)
+    user.insert(0, 'Username')
+    user.bind("<FocusIn>", on_enter)
+    user.bind("<FocusOut>", on_leave)
+
+    Frame(frame, width=295, height=2, bg='white').place(x=25,y=107)
+    Frame(frame, width=150, height=2, bg='white').place(x=100,y=200)
+
+    ################################################################
+
+    def on_enter(e):
+        code.delete(0, 'end')
+
+    def on_leave(e):
+        name=code.get()
+        if name=='':
+            code.insert(0, 'Password')
+
+    code = Entry(frame, width=15, fg = 'white', bg = "#c19a6b", border=0, font=("Microsoft YaHei UI Light", 12))
+    code.place(x=105, y = 210)
+    code.insert(0, 'Password')
+    code.bind("<FocusIn>", on_enter)
+    code.bind("<FocusOut>", on_leave)
+            
+    Frame(frame, width=150, height=2, bg='white').place(x=100,y=240)
+
+    ################################################################
+
+    def on_enter(e):
+        confirm_code.delete(0, 'end')
+
+    def on_leave(e):
+        name=confirm_code.get()
+        if name=='':
+            confirm_code.insert(0, 'Confirm Password')
+
+    confirm_code = Entry(frame, width=15, fg = 'white', bg = "#c19a6b", border=0, font=("Microsoft YaHei UI Light", 12))
+    confirm_code.place(x=105, y = 250)
+    confirm_code.insert(0, 'Confirm Password')
+    confirm_code.bind("<FocusIn>", on_enter)
+    confirm_code.bind("<FocusOut>", on_leave)
+            
+    Frame(frame, width=150, height=2, bg='white').place(x=100,y=280)
+
+    #################################################################
+
+    Button(frame, width=20, pady=7, text = 'Sign Up', bg='#704214', fg='white', border=0, command=signup).place(x=103, y=290)
+
+    sign_up = Button(frame, width=15, text='Sign in', border=0, bg="#c19a6b", cursor='hand2', fg='white', command=sign)
+    sign_up.place(x=120, y=330)
+
+    signup_window.mainloop()
+
+
+"""
+    if username=='admin' and password=='password': 
+        screen=Toplevel(window)
+        screen.title("App")
+        screen.geometry('360x640')
+        screen.config(bg = "#c19a6b")
+
+        Label(screen,text="Welcome to Light Track System", bg = "#c19a6b", font=("Microsoft YaHei UI Light", 23, 'bold')).pack(expand=True)
+
+        screen.mainloop()
+    
+    elif username!='admin' and password!='password':
+        messagebox.showerror("Invalid Credentials", "Please enter correct username and password")
+
+    elif password!='password':
+        messagebox.showerror("Invalid Credentials", "Please enter correct password")
+
+    elif username!='admin':
+        messagebox.showerror("Invalid Credentials", "Please enter correct username")
+"""
+
+'''
+file=pathlib.Path('Products.xlsx')
+if file.exists():
+    pass
+else:
+    file=Workbook()
+    sheet=file.active
+    sheet['A1']='Product ID'
+    sheet['B1']='Product Name'
+    sheet['C1']='Category'
+    sheet['D1']='Description'
+    sheet['E1']='Date Modified'
+    sheet['F1']='Price'
+    sheet['G1']='Quantity'
+    sheet['H1']='Attributes'
+    sheet['I1']='Manufacturer/Supplier'
+
+    file.save('Products.xlsx')
+'''
+
+"""
+    if username=='admin' and password=='password': 
+        screen=Toplevel(window)
+        screen.title("App")
+        screen.geometry('360x640')
+        screen.config(bg = "#c19a6b")
+
+        Label(screen,text="Welcome to Light Track System", bg = "#c19a6b", font=("Microsoft YaHei UI Light", 23, 'bold')).pack(expand=True)
+
+        screen.mainloop()
+    
+    elif username!='admin' and password!='password':
+        messagebox.showerror("Invalid Credentials", "Please enter correct username and password")
+
+    elif password!='password':
+        messagebox.showerror("Invalid Credentials", "Please enter correct password")
+
+    elif username!='admin':
+        messagebox.showerror("Invalid Credentials", "Please enter correct username")
+"""
+
+################################################################
+    
+def edit_selected_item(event):
+    item = treeview.focus()  # Get the item selected in the Treeview
+    values = treeview.item(item, 'values')  # Get the values of the selected item
+    if values:
+        name = values[1]
+        subprocess.Popen(['python', 'lib/addproduct.py', name])
+        root.destroy()
+
+treeview.bind("<<TreeviewSelect>>", edit_selected_item)
+
+
+def insert_image(filename, image_data):
+    try:
+        # Connect to the database
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+            # Prepare INSERT query
+            insert_query = "INSERT INTO Images (registration ,filename, image_data) VALUES (%s, %s)"
+            # Read image file as binary data
+            with open(filename, 'rb') as file:
+                binary_data = file.read()
+            # Execute the query
+            cursor.execute(insert_query, (filename, binary_data))
+            # Commit changes
+            connection.commit()
+            print("Image inserted successfully")
+    except Error as e:
+        print("Error inserting image:", e)
+    finally:
+        # Close database connection
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
