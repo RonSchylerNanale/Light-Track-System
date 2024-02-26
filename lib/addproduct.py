@@ -429,7 +429,7 @@ update_button.grid(row=7, column=2, padx=10, pady=10)
 imageFrame = Frame(root, bg=framebg, bd=0)
 imageFrame.pack(side=TOP, anchor="n")
 
-Label(imageFrame, text="Product Image: ", font='Helvetica 10 bold', bg=framebg, fg='white').grid(row=0, column=1, padx=10, pady=10, sticky="we")
+Label(imageFrame, text="Product Image", font='Helvetica 10 bold', bg=framebg, fg='white').grid(row=0, column=1, padx=10, pady=10, sticky="we")
 
 f = Frame(imageFrame, bd=1, bg='#704214', width=300, height=300, relief=GROOVE, border=0)
 f.grid(row=1, column=1, padx=20, pady=10, sticky='we')
