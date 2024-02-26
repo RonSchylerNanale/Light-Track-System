@@ -13,7 +13,6 @@ from PIL import Image, ImageTk
 import os
 from mysql.connector import Error
 import io
-import base64
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -94,7 +93,7 @@ def search():
         cursor = conn.cursor()
 
         # Execute SQL query to search for the product
-        query = "SELECT * FROM products WHERE LOWER(CONCAT(registration, name, price, category, quantity)) LIKE %s"
+        query = "SELECT * FROM products WHERE LOWER(CONCAT(registration, name, price, quantity)) LIKE %s"
         cursor.execute(query, ("%" + text + "%",))
 
         # Clear existing items in the Treeview
@@ -103,10 +102,10 @@ def search():
         # Insert matching rows into the Treeview
         for row in cursor.fetchall():
         # Extract specific columns from the row
-            registration, name, price, category, quantity = row[0], row[1], row[5], row[2], row[6]
+            registration, name, price, quantity = row[0], row[1], row[5],row[6]
 
         # Insert the extracted values into the Treeview
-            treeview.insert("", "end", values=(registration, name, price, category, quantity))
+            treeview.insert("", "end", values=(registration, name, price,quantity))
 
     except mysql.connector.Error as e:
         print("Error:", e)
