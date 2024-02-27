@@ -192,7 +192,7 @@ def display_image(obj, image_data):
     img = img.resize((200, 200))  # Resize the image
     img = ImageTk.PhotoImage(img)
     image_label = Label(obj, image=img)
-    image_label.grid(row=0, column=0, sticky="ew", padx=10, pady=3)
+    image_label.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
     image_label.image = img  # Keep a reference to prevent image from being garbage collected
 
 #################################################################
@@ -206,7 +206,7 @@ def display_product_details(data):
         # Create a new LabelFrame widget to display product details
         global obj
         obj = LabelFrame(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
-        obj.pack(side=TOP, anchor="n", padx=10, fill='x')
+        obj.pack(side=TOP, anchor="n", padx=10,pady=10, fill='x')
 
         # Labels for database fields
         labels = ['Product No:', 'Product Name:', 'Category:', 'Description:', 'Date:', 'Price:', 'Quantity:', 'Attributes:', 'Supplier:', "Image:"]
@@ -223,7 +223,6 @@ def display_product_details(data):
     else:
         # If data is None, display a message indicating no data found
         Label(root, text="No data found for selected registration", font='Arial 10 bold', fg='red').pack()
-
 
 #################################################################
 
@@ -257,7 +256,6 @@ imageicon3 = PhotoImage(file='images/search.png')
 search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
 search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 
-
 # search box
 Search = StringVar()
 search_entry = Entry(label, textvariable=Search, font='Helvetica 15', bg=framebg, fg='white', bd=0, highlightthickness=1, highlightbackground=framebg)
@@ -281,7 +279,7 @@ frame.pack(side=LEFT, fill="both", anchor="n")
 
 # Frame for Treeview
 f = Frame(frame, bd=3, bg='#704214', relief=GROOVE)
-f.pack(side=LEFT, fill="y", anchor="w")
+f.pack(side=LEFT, fill="y", anchor="w", padx=(10,0), pady=10)
 
 # Create vertical scrollbar
 fscroll = ttk.Scrollbar(f, orient="vertical", style="Vertical.TScrollbar")
@@ -319,8 +317,8 @@ treeview.bind("<<TreeviewSelect>>", on_item_select)
 
 ################################################################
 
-obj = LabelFrame(root, text='Product Details:', font=15, bd=2, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
-obj.pack(side=TOP, anchor="n", padx = 10, fill='x')
+obj = LabelFrame(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
+obj.pack(side=TOP, anchor="n", padx = 10, pady = 10, fill='x')
 
 # Labels for database fields
 labels = ['Product No:', 'Product Name:', 'Category:', 'Description:', 'Date:', 'Price:', 'Quantity:', 'Attributes:', 'Supplier:', 'Image:']
