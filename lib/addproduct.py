@@ -340,9 +340,50 @@ def Update():
         if conn.is_connected():
             cursor.close()
 
+################################################################
+            
+def delete():
+    registration_number = Registration.get()
+
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Check if the product exists
+        query = "SELECT * FROM products WHERE registration = %s"
+        cursor.execute(query, (registration_number,))
+        existing_product = cursor.fetchone()
+
+        if existing_product:
+            # Product exists, proceed with deletion
+            delete_query = "DELETE FROM products WHERE registration = %s"
+            cursor.execute(delete_query, (registration_number,))
+            conn.commit()
+
+            messagebox.showinfo('Info', 'Product deleted successfully!')
+            clear()  # Clear the entry fields
+
+        else:
+            # Product does not exist
+            messagebox.showerror('Error', 'Product does not exist')
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+        messagebox.showerror('Error', 'Failed to delete product.')
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
 
 ################################################################
-        
+ 
 #### HEADER ####
 
 # top frames
@@ -424,6 +465,9 @@ attribute_entry.grid(row=5, column=2, padx=10, pady=10)
 Supplier = StringVar()
 supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bold', bg='white')
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
+
+delete_button=Button(obj, text="Delete", bg='#704214', border=0, command=delete, font='Helvetica 10 bold', fg='White', width=15, height=2)
+delete_button.grid(row=7, column=0, padx=10, pady=10)
 
 update_button=Button(obj, text="Update", bg='#704214', border=0, command=Update, font='Helvetica 10 bold', fg='White', width=15, height=2)
 update_button.grid(row=7, column=2, padx=10, pady=10)
