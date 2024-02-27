@@ -390,8 +390,7 @@ def delete():
 ################################################################
             
 def log_changes(action, registration_number, product_name):
-
-
+    
     try:
         conn = mysql.connector.connect(
             host="localhost",

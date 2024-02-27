@@ -35,6 +35,12 @@ def open_database():
     root.destroy()
 
 ################################################################
+
+def open_history():
+    subprocess.Popen(['python', 'lib/history.py'])
+    root.destroy()
+
+################################################################
     
 def logout():
     subprocess.Popen(['python', 'lib/logindb.py'])
@@ -59,12 +65,15 @@ button_frame.pack(expand=True)
 
 imageicon5 = PhotoImage(file='images/inventory.png')
 products = Button(button_frame, image=imageicon5, bg='#c19a6b', border=0, command=open_product)
-products.pack(side=LEFT, pady=10, padx=50)
+products.grid(row=1, column=0)
 
 imageicon6 = PhotoImage(file='images/database.png')
 database = Button(button_frame, image=imageicon6, bg='#c19a6b', border=0, command=open_database)
-database.pack(side=RIGHT, pady=10, padx=50)
+database.grid(row=1, column=1)
 
+imageicon7 = PhotoImage(file='images/history.png')
+database = Button(button_frame, image=imageicon7, bg='#c19a6b', border=0, command=open_history)
+database.grid(row=1, column=2)
 
 
 
