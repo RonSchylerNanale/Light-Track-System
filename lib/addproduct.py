@@ -9,11 +9,9 @@ from tkinter.ttk import Combobox
 import mysql.connector
 from subprocess import call
 import subprocess
-import os.path,time
-from mysql.connector import Error
 from PIL import Image, ImageTk
 from tkinter import StringVar
-
+from datetime import datetime
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -200,6 +198,8 @@ def Save():
             cursor.execute(insert_query, data)
             conn.commit()
 
+            log_changes("added", R1)
+
             messagebox.showinfo('Info', 'Product added successfully!')
             clear()  # Clear the entry fields
             product_no()  # Generate a new registration number
@@ -328,6 +328,8 @@ def Update():
             cursor.execute(update_query, data)
             conn.commit()
 
+            log_changes("updated", R1, N1)
+
             messagebox.showinfo('Info', 'Product updated successfully!')
         else:
             messagebox.showerror('Error', 'Product does not exist')
@@ -344,6 +346,7 @@ def Update():
             
 def delete():
     registration_number = Registration.get()
+    product_name = Name.get()
 
     try:
         conn = mysql.connector.connect(
@@ -365,6 +368,8 @@ def delete():
             delete_query = "DELETE FROM products WHERE registration = %s"
             cursor.execute(delete_query, (registration_number,))
             conn.commit()
+    
+            log_changes("deleted", registration_number, product_name)
 
             messagebox.showinfo('Info', 'Product deleted successfully!')
             clear()  # Clear the entry fields
@@ -383,6 +388,50 @@ def delete():
             conn.close()
 
 ################################################################
+            
+def log_changes(action, registration_number, product_name):
+
+
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Create change_log table if it doesn't exist
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS change_log (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            action VARCHAR(50) NOT NULL,
+            registration_number INT NOT NULL,
+            product_name VARCHAR(255) NOT NULL,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+        cursor.execute(create_table_query)
+        conn.commit()
+
+        # Get current date and time
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Insert log entry into the database
+        insert_query = "INSERT INTO change_log (action, registration_number, product_name, timestamp) VALUES (%s, %s, %s, %s)"
+        data = (action, registration_number, product_name, current_datetime)
+        cursor.execute(insert_query, data)
+        conn.commit()
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
  
 #### HEADER ####
 
@@ -467,7 +516,7 @@ supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bo
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
 
 delete_button=Button(obj, text="Delete", bg='#704214', border=0, command=delete, font='Helvetica 10 bold', fg='White', width=15, height=2)
-delete_button.grid(row=7, column=0, padx=10, pady=10)
+delete_button.grid(row=7, column=0, padx=20, pady=10)
 
 update_button=Button(obj, text="Update", bg='#704214', border=0, command=Update, font='Helvetica 10 bold', fg='White', width=15, height=2)
 update_button.grid(row=7, column=2, padx=10, pady=10)
