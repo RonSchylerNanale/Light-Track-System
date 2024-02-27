@@ -84,7 +84,7 @@ def load_data():
     cursor = connection.cursor()
 
     # Execute query to select data from the table
-    cursor.execute("SELECT * FROM products")
+    cursor.execute("SELECT registration, name, category, description, date, price, quantity, attributes, supplier FROM products")
 
     # Fetch all rows from the query result
     rows = cursor.fetchall()
@@ -176,7 +176,7 @@ def search():
         cursor = conn.cursor()
 
         # Execute SQL query to search for the product
-        query = "SELECT * FROM products WHERE LOWER(CONCAT(registration, name, category, description, date, price, quantity, attributes, supplier, image)) LIKE %s"
+        query = "SELECT * FROM products WHERE LOWER(CONCAT(registration, name, category, description, date, price, quantity, attributes, supplier)) LIKE %s"
         cursor.execute(query, ("%" + text + "%",))
 
         # Clear existing items in the Treeview
@@ -188,7 +188,7 @@ def search():
             registration, name, category, description, date, price, quantity, attributes, supplier, image = row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7],row[8], row[9]
 
         # Insert the extracted values into the Treeview
-            treeview.insert("", "end", values=(registration, name, category, description, date, price, quantity, attributes, supplier, image))
+            treeview.insert("", "end", values=(registration, name, category, description, date, price, quantity, attributes, supplier))
 
     except mysql.connector.Error as e:
         print("Error:", e)
@@ -244,8 +244,8 @@ frame = Frame(root, bg="#c19a6b", bd=0)
 frame.pack(side=TOP, fill="both", anchor="n", expand=True)
 
 # Frame for Treeview
-f = tk.Frame(frame, bd=3, bg='#704214', relief=tk.GROOVE)
-f.pack(side=TOP, fill="both", anchor="nw", expand=True)
+f = tk.Frame(frame, bd=0, bg='#704214', relief=tk.GROOVE)
+f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 
 # Create vertical scrollbar
 fscroll = ttk.Scrollbar(f, orient="vertical", style="Vertical.TScrollbar")
@@ -255,14 +255,14 @@ fscroll.pack(side="right", fill="y")
 hscroll = ttk.Scrollbar(f, orient="horizontal", style="Horizontal.TScrollbar")
 hscroll.pack(side="bottom", fill="x")
 
-cols = ("registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier", "image")
+cols = ("registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier")
 
 # Create Treeview widget
 treeview = SortableTreeview(f, show="headings", columns=cols, height=12)
 treeview.pack(side=TOP, fill="both", anchor="nw", expand=True)
 
 # Configure column width for each column
-column_widths = {"registration": 70, "name": 70, "category": 70, "description": 70, "date": 70, "price": 70, "quantity": 70, "attributes": 70, "supplier": 70, "image": 70}
+column_widths = {"registration": 70, "name": 70, "category": 70, "description": 70, "date": 70, "price": 70, "quantity": 70, "attributes": 70, "supplier": 70}
 for col, width in column_widths.items():
     treeview.column(col, width=width)
 
@@ -271,7 +271,7 @@ fscroll.config(command=treeview.yview)
 hscroll.config(command=treeview.xview)
 
 # Set headings using SortableTreeview's set_heading method
-heading_map = {"registration": "#1", "name": "#2", "category": "#3", "description": "#4", "date": "#5", "price": "#6", "quantity": "#7", "attributes": "#8", "supplier": "#9", "image": "#10"}
+heading_map = {"registration": "#1", "name": "#2", "category": "#3", "description": "#4", "date": "#5", "price": "#6", "quantity": "#7", "attributes": "#8", "supplier": "#9"}
 treeview.set_heading(heading_map)
 
 for col, col_id in heading_map.items():

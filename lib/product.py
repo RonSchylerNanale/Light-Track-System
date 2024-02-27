@@ -278,7 +278,7 @@ frame = Frame(root, bg="#c19a6b", bd=0)
 frame.pack(side=LEFT, fill="both", anchor="n")
 
 # Frame for Treeview
-f = Frame(frame, bd=3, bg='#704214', relief=GROOVE)
+f = Frame(frame, bd=0, bg='#704214', relief=GROOVE)
 f.pack(side=LEFT, fill="y", anchor="w", padx=(10,0), pady=10)
 
 # Create vertical scrollbar

@@ -59,11 +59,11 @@ button_frame.pack(expand=True)
 
 imageicon5 = PhotoImage(file='images/inventory.png')
 products = Button(button_frame, image=imageicon5, bg='#c19a6b', border=0, command=open_product)
-products.pack(side=RIGHT, pady=10, padx=50)
+products.pack(side=LEFT, pady=10, padx=50)
 
-imageicon6 = PhotoImage(file='images/sales.png')
+imageicon6 = PhotoImage(file='images/database.png')
 database = Button(button_frame, image=imageicon6, bg='#c19a6b', border=0, command=open_database)
-database.pack(side=LEFT, pady=10, padx=50)
+database.pack(side=RIGHT, pady=10, padx=50)
 
 
 
