@@ -49,6 +49,10 @@ def add():
     subprocess.Popen(['python', 'lib/addproduct.py'])
     root.destroy()
 
+def archive():
+    subprocess.Popen(['python', 'lib/archive.py'])
+    root.destroy()
+
 ################################################################
     
 def load_data():
@@ -288,6 +292,9 @@ search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 imageicon1 = PhotoImage(file='images/back_button.png')
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
+
+archive_button = Button(label, text='Open Archive', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
+archive_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 #################################################################
 

@@ -12,6 +12,7 @@ import subprocess
 from PIL import Image, ImageTk
 from tkinter import StringVar
 from datetime import datetime
+import tkinter.messagebox as messagebox
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -344,8 +345,6 @@ def Update():
 
 ################################################################
             
-import tkinter.messagebox as messagebox
-
 def delete():
     registration_number = Registration.get()
     product_name = Name.get()
