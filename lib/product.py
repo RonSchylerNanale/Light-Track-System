@@ -24,6 +24,14 @@ root.geometry("800x600")
 root.config(bg = background)
 root.resizable(True,True)
 
+style = ttk.Style()
+style.theme_use("clam")  # Use the default theme
+style.configure("Treeview", rowheight=25, background=framebg, foreground = "white")  # Set row height and background color
+style.configure("Treeview.Heading", font=("Helvetica", 10, "bold"),  background="#704214", foreground="white")  # Set heading font
+style.map("Treeview", foreground=[('selected', 'black')], background=[('selected', 'white')])  # Set selected row color
+style.configure("Treeview", fieldbackground=framebg)  # Set field background color
+style.configure("Treeview.Treeitem", background=framebg, fieldbackground=framebg, foreground ="white")  # Set item background color
+
 # Connect to MySQL database
 mydb = mysql.connector.connect(
    host="localhost",

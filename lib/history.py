@@ -19,6 +19,15 @@ root.geometry("800x600")
 root.config(bg = background)
 root.resizable(True,True)
 
+style = ttk.Style()
+style.theme_use("clam")  # Use the default theme
+style.configure("Treeview", rowheight=25, background=framebg, foreground = "white")  # Set row height and background color
+style.configure("Treeview.Heading", font=("Helvetica", 10, "bold"),  background="#704214", foreground="white")  # Set heading font
+style.map("Treeview", foreground=[('selected', 'black')], background=[('selected', 'white')])  # Set selected row color
+style.configure("Treeview", fieldbackground=framebg)  # Set field background color
+style.configure("Treeview.Treeitem", background=framebg, fieldbackground=framebg, foreground ="white")  # Set item background color
+
+
 ################################################################
 
 class SortableTreeview(ttk.Treeview):
@@ -27,7 +36,7 @@ class SortableTreeview(ttk.Treeview):
         self.heading_clicked = False
         self.heading_map = {}  # Dictionary to map heading names to column IDs
         self.bind("<ButtonRelease-1>", self.on_click)
-
+        
     def set_heading(self, heading_map):
         self.heading_map = heading_map
 
