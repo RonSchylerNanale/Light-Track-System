@@ -19,6 +19,15 @@ root.geometry("800x600")
 root.config(bg = background)
 root.resizable(True,True)
 
+style = ttk.Style()
+style.theme_use("clam")  # Use the default theme
+style.configure("Treeview", rowheight=25, background=framebg, foreground = "white")  # Set row height and background color
+style.configure("Treeview.Heading", font=("Helvetica", 10, "bold"),  background="#704214", foreground="white")  # Set heading font
+style.map("Treeview", foreground=[('selected', 'black')], background=[('selected', 'white')])  # Set selected row color
+style.configure("Treeview", fieldbackground=framebg)  # Set field background color
+style.configure("Treeview.Treeitem", background=framebg, fieldbackground=framebg, foreground ="white")  # Set item background color
+
+
 ################################################################
 
 class SortableTreeview(ttk.Treeview):
@@ -148,7 +157,7 @@ def export_to_excel(treeview):
         data_list.append(tuple(item_data))
 
     # Convert data to a DataFrame
-    df = pd.DataFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier", "image"])
+    df = pd.DataFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier"])
 
     # Ask user to choose filename and location
     filename = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
@@ -156,6 +165,8 @@ def export_to_excel(treeview):
         # Export DataFrame to Excel
         df.to_excel(filename, index=False)
         print("Data exported to", filename)
+        messagebox.showinfo("Data exported to", filename)
+
 
 ################################################################
 
