@@ -388,6 +388,92 @@ def delete():
             conn.close()
 
 ################################################################
+
+def archive():
+    registration_number = Registration.get()
+    product_name = Name.get()
+
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Create the archive table if it doesn't exist
+        create_table_query = """
+            CREATE TABLE IF NOT EXISTS archive (
+                registration VARCHAR(255) PRIMARY KEY,
+                product_name VARCHAR(255),
+                category VARCHAR(255),
+                description TEXT,
+                date DATE,
+                price DECIMAL(10, 2),
+                quantity INT,
+                attributes TEXT,
+                supplier VARCHAR(255),
+                image LONGBLOB
+            )
+        """
+        cursor.execute(create_table_query)
+        conn.commit()
+
+        # Check if the product exists
+        query = "SELECT * FROM products WHERE registration = %s"
+        cursor.execute(query, (registration_number,))
+        existing_product = cursor.fetchone()
+
+        if existing_product:
+            # Product exists, proceed with archiving
+            # Extract additional data to be archived
+            category = Category.get()
+            description = Description.get()
+            date = Date.get()
+            price = Price.get()
+            quantity = Quantity.get()
+            attributes = Attributes.get()
+            supplier = Supplier.get()
+            
+            img_data = None
+            if 'image' in globals() and image:
+                img_data = convertToBinary(image)  # Assuming convertToBinary is a function to convert image to binary data
+            # Insert the record into the archive table
+
+            archive_query = """
+                INSERT INTO archive 
+                (registration, product_name, category, description, date, price, quantity, attributes, supplier, image) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            cursor.execute(archive_query, (registration_number, product_name, category, description, date, price, quantity, attributes, supplier, img_data))
+            conn.commit()
+    
+            # Delete the record from the products table
+            delete_query = "DELETE FROM products WHERE registration = %s"
+            cursor.execute(delete_query, (registration_number,))
+            conn.commit()
+
+            log_changes("archived", registration_number, product_name)
+
+            messagebox.showinfo('Info', 'Product archived successfully and deleted from products table!')
+            clear()  # Clear the entry fields
+
+        else:
+            # Product does not exist
+            messagebox.showerror('Error', 'Product does not exist')
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+        messagebox.showerror('Error', 'Failed to archive product.')
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+################################################################
             
 def log_changes(action, registration_number, product_name):
     
@@ -431,6 +517,7 @@ def log_changes(action, registration_number, product_name):
             cursor.close()
             conn.close()
 
+################################################################
  
 #### HEADER ####
 
@@ -514,8 +601,11 @@ Supplier = StringVar()
 supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bold', bg='white')
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
 
+archive_button=Button(obj, text="Archive", bg='#704214', border=0, command=archive, font='Helvetica 10 bold', fg='White', width=15, height=2)
+archive_button.grid(row=7, column=0, padx=20, pady=10)
+
 delete_button=Button(obj, text="Delete", bg='#704214', border=0, command=delete, font='Helvetica 10 bold', fg='White', width=15, height=2)
-delete_button.grid(row=7, column=0, padx=20, pady=10)
+delete_button.grid(row=8, column=0, padx=20, pady=10)
 
 update_button=Button(obj, text="Update", bg='#704214', border=0, command=Update, font='Helvetica 10 bold', fg='White', width=15, height=2)
 update_button.grid(row=7, column=2, padx=10, pady=10)

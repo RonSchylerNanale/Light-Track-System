@@ -30,8 +30,8 @@ def open_product():
     
 ################################################################
 
-def open_database():
-    subprocess.Popen(['python', 'lib/database.py'])
+def open_inventory():
+    subprocess.Popen(['python', 'lib/inventory.py'])
     root.destroy()
 
 ################################################################
@@ -63,12 +63,12 @@ frame.pack(side=TOP, fill="both", expand=True)
 button_frame = Frame(frame, bg="#c19a6b")
 button_frame.pack(expand=True)
 
-imageicon5 = PhotoImage(file='images/inventory.png')
+imageicon5 = PhotoImage(file='images/product.png')
 products = Button(button_frame, image=imageicon5, bg='#c19a6b', border=0, command=open_product)
 products.grid(row=1, column=0)
 
-imageicon6 = PhotoImage(file='images/database.png')
-database = Button(button_frame, image=imageicon6, bg='#c19a6b', border=0, command=open_database)
+imageicon6 = PhotoImage(file='images/inventory.png')
+database = Button(button_frame, image=imageicon6, bg='#c19a6b', border=0, command=open_inventory)
 database.grid(row=1, column=1)
 
 imageicon7 = PhotoImage(file='images/history.png')
