@@ -198,7 +198,7 @@ def Save():
             cursor.execute(insert_query, data)
             conn.commit()
 
-            log_changes("added", R1)
+            log_changes("added", R1, N1)
 
             messagebox.showinfo('Info', 'Product added successfully!')
             clear()  # Clear the entry fields
@@ -344,54 +344,65 @@ def Update():
 
 ################################################################
             
+import tkinter.messagebox as messagebox
+
 def delete():
     registration_number = Registration.get()
     product_name = Name.get()
 
-    try:
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="LTS",
-            port=3306
-        )
-        cursor = conn.cursor()
+    # Function to handle deletion after confirmation
+    def confirm_delete():
+        try:
+            # Establish database connection
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="LTS",
+                port=3306
+            )
+            cursor = conn.cursor()
 
-        # Check if the product exists
-        query = "SELECT * FROM products WHERE registration = %s"
-        cursor.execute(query, (registration_number,))
-        existing_product = cursor.fetchone()
+            # Check if the product exists
+            query = "SELECT * FROM products WHERE registration = %s"
+            cursor.execute(query, (registration_number,))
+            existing_product = cursor.fetchone()
 
-        if existing_product:
-            # Product exists, proceed with deletion
-            delete_query = "DELETE FROM products WHERE registration = %s"
-            cursor.execute(delete_query, (registration_number,))
-            conn.commit()
-    
-            log_changes("deleted", registration_number, product_name)
+            if existing_product:
+                # Product exists, proceed with deletion
+                delete_query = "DELETE FROM products WHERE registration = %s"
+                cursor.execute(delete_query, (registration_number,))
+                conn.commit()
+        
+                log_changes("deleted", registration_number, product_name)
 
-            messagebox.showinfo('Info', 'Product deleted successfully!')
-            clear()  # Clear the entry fields
+                messagebox.showinfo('Info', 'Product deleted successfully!')
+                clear()  # Clear the entry fields
 
-        else:
-            # Product does not exist
-            messagebox.showerror('Error', 'Product does not exist')
+            else:
+                # Product does not exist
+                messagebox.showerror('Error', 'Product does not exist')
 
-    except mysql.connector.Error as e:
-        print("Error:", e)
-        messagebox.showerror('Error', 'Failed to delete product.')
+        except mysql.connector.Error as e:
+            print("Error:", e)
+            messagebox.showerror('Error', 'Failed to delete product.')
 
-    finally:
-        if conn.is_connected():
-            cursor.close()
-            conn.close()
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+
+    # Display confirmation dialog
+    confirm = messagebox.askyesno('Confirmation', f'Are you sure you want to delete {product_name}?')
+    if confirm:
+        confirm_delete()
+
 
 ################################################################
 
 def archive():
-    registration_number = Registration.get()
-    product_name = Name.get()
+    registration = Registration.get()
+    name = Name.get()
 
     try:
         conn = mysql.connector.connect(
@@ -407,7 +418,7 @@ def archive():
         create_table_query = """
             CREATE TABLE IF NOT EXISTS archive (
                 registration VARCHAR(255) PRIMARY KEY,
-                product_name VARCHAR(255),
+                name VARCHAR(255),
                 category VARCHAR(255),
                 description TEXT,
                 date DATE,
@@ -423,7 +434,7 @@ def archive():
 
         # Check if the product exists
         query = "SELECT * FROM products WHERE registration = %s"
-        cursor.execute(query, (registration_number,))
+        cursor.execute(query, (registration,))
         existing_product = cursor.fetchone()
 
         if existing_product:
@@ -444,18 +455,18 @@ def archive():
 
             archive_query = """
                 INSERT INTO archive 
-                (registration, product_name, category, description, date, price, quantity, attributes, supplier, image) 
+                (registration, name, category, description, date, price, quantity, attributes, supplier, image) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-            cursor.execute(archive_query, (registration_number, product_name, category, description, date, price, quantity, attributes, supplier, img_data))
+            cursor.execute(archive_query, (registration, name, category, description, date, price, quantity, attributes, supplier, img_data))
             conn.commit()
     
             # Delete the record from the products table
             delete_query = "DELETE FROM products WHERE registration = %s"
-            cursor.execute(delete_query, (registration_number,))
+            cursor.execute(delete_query, (registration,))
             conn.commit()
 
-            log_changes("archived", registration_number, product_name)
+            log_changes("archived", registration, name)
 
             messagebox.showinfo('Info', 'Product archived successfully and deleted from products table!')
             clear()  # Clear the entry fields

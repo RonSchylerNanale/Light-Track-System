@@ -195,13 +195,24 @@ def clear_product_details():
 #################################################################
 
 def display_image(obj, image_data):
-    # Convert image data to PhotoImage
-    img = Image.open(io.BytesIO(image_data))
-    img = img.resize((200, 200))  # Resize the image
-    img = ImageTk.PhotoImage(img)
-    image_label = Label(obj, image=img)
-    image_label.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
-    image_label.image = img  # Keep a reference to prevent image from being garbage collected
+    try:
+        # Convert image data to PhotoImage
+        img = Image.open(io.BytesIO(image_data))
+        img = img.resize((200, 200))  # Resize the image
+        img = ImageTk.PhotoImage(img)
+        image_label = Label(obj, image=img)
+        image_label.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
+        image_label.image = img  # Keep a reference to prevent image from being garbage collected
+    
+    except Exception as e:
+        print("Error:", e)
+        # Display a placeholder image or error message
+        error_img = Image.open("images/error_image.jpg")  # Provide a path to a placeholder error image
+        error_img = error_img.resize((200, 200))  # Resize the error image
+        error_img = ImageTk.PhotoImage(error_img)
+        image_label = Label(obj, image=error_img)
+        image_label.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
+        image_label.image = error_img  # Keep a reference to prevent image from being garbage collected
 
 #################################################################
 

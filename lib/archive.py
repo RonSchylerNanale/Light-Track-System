@@ -36,7 +36,7 @@ class SortableTreeview(ttk.Treeview):
         self.heading_clicked = False
         self.heading_map = {}  # Dictionary to map heading names to column IDs
         self.bind("<ButtonRelease-1>", self.on_click)
-        
+
     def set_heading(self, heading_map):
         self.heading_map = heading_map
 
@@ -93,7 +93,7 @@ def load_data():
     cursor = connection.cursor()
 
     # Execute query to select data from the table
-    cursor.execute("SELECT id, action, registration_number, product_name, timestamp FROM change_log")
+    cursor.execute("SELECT registration, name, category, description, date, price, quantity, attributes, supplier FROM archive")
 
     # Fetch all rows from the query result
     rows = cursor.fetchall()
@@ -124,7 +124,7 @@ def export():
         )
 
         # Define SQL query to fetch data
-        query = "SELECT * FROM products"
+        query = "SELECT * FROM archive"
 
         # Execute the query and fetch data into a pandas DataFrame
         df = pd.read_sql(query, connection)
@@ -157,7 +157,7 @@ def export_to_excel(treeview):
         data_list.append(tuple(item_data))
 
     # Convert data to a DataFrame
-    df = pd.DataFrame(data_list, columns=["id", "action", "registration_number", "product_name", "timestamp"])
+    df = pd.DataFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier"])
 
     # Ask user to choose filename and location
     filename = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
@@ -165,6 +165,8 @@ def export_to_excel(treeview):
         # Export DataFrame to Excel
         df.to_excel(filename, index=False)
         print("Data exported to", filename)
+        messagebox.showinfo("Data exported to", filename)
+
 
 ################################################################
 
@@ -185,7 +187,7 @@ def search():
         cursor = conn.cursor()
 
         # Execute SQL query to search for the product
-        query = "SELECT * FROM change_log WHERE LOWER(CONCAT(id, action, registration_number, product_name, timestamp)) LIKE %s"
+        query = "SELECT * FROM archive WHERE LOWER(CONCAT(registration, name, category, description, date, price, quantity, attributes, supplier)) LIKE %s"
         cursor.execute(query, ("%" + text + "%",))
 
         # Clear existing items in the Treeview
@@ -194,10 +196,10 @@ def search():
         # Insert matching rows into the Treeview
         for row in cursor.fetchall():
         # Extract specific columns from the row
-            id, action, registration_number, product_name, timestamp = row[0], row[1], row[2], row[3], row[4], row[5], row[6]
+            registration, name, category, description, date, price, quantity, attributes, supplier, image = row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7],row[8], row[9]
 
         # Insert the extracted values into the Treeview
-            treeview.insert("", "end", values=(id, action, registration_number, product_name, timestamp))
+            treeview.insert("", "end", values=(registration, name, category, description, date, price, quantity, attributes, supplier))
 
     except mysql.connector.Error as e:
         print("Error:", e)
@@ -223,7 +225,7 @@ def on_leave(e):
 #### HEADER ####
 
 # Label
-label = Label(root, text='History', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
+label = Label(root, text='Archive', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
 # Search button
@@ -264,14 +266,14 @@ fscroll.pack(side="right", fill="y")
 hscroll = ttk.Scrollbar(f, orient="horizontal", style="Horizontal.TScrollbar")
 hscroll.pack(side="bottom", fill="x")
 
-cols = ("id", "action", "registration_number", "product_name", "timestamp")
+cols = ("registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier")
 
 # Create Treeview widget
 treeview = SortableTreeview(f, show="headings", columns=cols, height=12)
 treeview.pack(side=TOP, fill="both", anchor="nw", expand=True)
 
 # Configure column width for each column
-column_widths = {"id": 70, "action": 70, "registration_number": 70, "product_name": 70, "timestamp": 70}
+column_widths = {"registration": 70, "name": 70, "category": 70, "description": 70, "date": 70, "price": 70, "quantity": 70, "attributes": 70, "supplier": 70}
 for col, width in column_widths.items():
     treeview.column(col, width=width)
 
@@ -280,7 +282,7 @@ fscroll.config(command=treeview.yview)
 hscroll.config(command=treeview.xview)
 
 # Set headings using SortableTreeview's set_heading method
-heading_map = {"id": "#1", "action": "#2", "registration_number": "#3", "product_name": "#4", "timestamp": "#5"}
+heading_map = {"registration": "#1", "name": "#2", "category": "#3", "description": "#4", "date": "#5", "price": "#6", "quantity": "#7", "attributes": "#8", "supplier": "#9"}
 treeview.set_heading(heading_map)
 
 for col, col_id in heading_map.items():

@@ -167,7 +167,6 @@ def export_to_excel(treeview):
         print("Data exported to", filename)
         messagebox.showinfo("Data exported to", filename)
 
-
 ################################################################
 
 def search():
@@ -218,7 +217,7 @@ def on_enter(e):
 def on_leave(e):
     name=search_entry.get()
     if name=='':
-        search_entry.insert(0, 'Username')
+        search_entry.insert(0, 'Search')
 
 ################################################################
 
