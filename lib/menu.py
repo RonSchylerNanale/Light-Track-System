@@ -5,7 +5,6 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
 from tkinter.ttk import Combobox
-import openpyxl, xlrd
 from openpyxl import Workbook
 import pathlib
 import mysql.connector
@@ -18,7 +17,7 @@ framefg = "#c19a6b"
 
 root = Tk()
 root.title("Light Track System")
-root.geometry("800x600")
+root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
 
@@ -47,7 +46,6 @@ def logout():
     root.destroy()
     messagebox.showinfo("Logout", "You have been logged out.")  
 
-
 ################################################################
 
 label = Label(root, text='Main Menu', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
@@ -75,6 +73,12 @@ imageicon7 = PhotoImage(file='images/history.png')
 database = Button(button_frame, image=imageicon7, bg='#c19a6b', border=0, command=open_history)
 database.grid(row=1, column=2)
 
+
+clock_frame = Frame(label, bg="#c19a6b")
+clock_frame.pack(expand=True)
+
+lbl_clock=Label(clock_frame, text="Welcome to Inventory Management System\t\t Date: DD-MM-YYY Time: HH-MM-SS", compound=LEFT, font=("Helvetica", 10, "bold"), bg="white", fg="black", anchor="w", padx=20)
+lbl_clock.grid(row=0, column=2)
 
 
 

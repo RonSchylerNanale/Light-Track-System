@@ -15,7 +15,7 @@ framefg = "#c19a6b"
 
 root = Tk()
 root.title("Light Track System")
-root.geometry("800x600")
+root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
 
