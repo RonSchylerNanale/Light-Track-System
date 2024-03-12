@@ -117,20 +117,6 @@ def show_image():
     return img_variable  # Return the PhotoImage object
 
 ################################################################
-'''
-def photoimage_to_bytes(img_variable):
-    # Get the size of the PhotoImage
-    width = img_variable.width()
-    height = img_variable.height()
-
-    # Create a new PIL Image with the same size
-    img = Image.new("RGB", (width, height))
-
-    # Convert PhotoImage to bytes
-    img_byte_array = io.BytesIO()
-    img.save(img_byte_array, format='PNG')
-    return img_byte_array.getvalue()
-'''
 
 def convertToBinary(img_variable):
     with open(img_variable, 'rb') as file:
@@ -396,7 +382,6 @@ def delete():
     if confirm:
         confirm_delete()
 
-
 ################################################################
 
 def archive():
@@ -612,10 +597,11 @@ supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bo
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
 
 archive_button=Button(obj, text="Archive", bg='#704214', border=0, command=archive, font='Helvetica 10 bold', fg='White', width=15, height=2)
-archive_button.grid(row=7, column=0, padx=20, pady=10)
+archive_button.grid(row=8, column=0, padx=20, pady=10)
+
 
 delete_button=Button(obj, text="Delete", bg='#704214', border=0, command=delete, font='Helvetica 10 bold', fg='White', width=15, height=2)
-delete_button.grid(row=8, column=0, padx=20, pady=10)
+delete_button.grid(row=7, column=0, padx=20, pady=10)
 
 update_button=Button(obj, text="Update", bg='#704214', border=0, command=Update, font='Helvetica 10 bold', fg='White', width=15, height=2)
 update_button.grid(row=7, column=2, padx=10, pady=10)

@@ -278,7 +278,6 @@ imageicon4 = PhotoImage(file='images/add.png')
 search_button = Button(label, image=imageicon4, bg='#704214', fg='white', font='Helvetica 13 bold', command=add, bd=0)
 search_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
 
-
 imageicon3 = PhotoImage(file='images/search.png')
 search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
 search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
@@ -300,7 +299,7 @@ back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
 order_button = Button(label, text='Order', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=order, border=0)
 order_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
-archive_button = Button(label, text='Open Archive', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
+archive_button = Button(label, text='Archive', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
 archive_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 #################################################################
@@ -313,8 +312,6 @@ frame.pack(side=LEFT, fill="both", anchor="n")
 # Frame for Treeview
 f = Frame(frame, bd=0, bg='#704214', relief=GROOVE)
 f.pack(side=LEFT, fill="y", anchor="w", padx=(10,0), pady=10)
-
-
 
 # Create vertical scrollbar
 fscroll = ttk.Scrollbar(f, orient="vertical", style="Vertical.TScrollbar")

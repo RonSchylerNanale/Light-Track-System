@@ -167,7 +167,6 @@ def export_to_excel(treeview):
         print("Data exported to", filename)
         messagebox.showinfo("Data exported to", filename)
 
-
 ################################################################
 
 def search():
@@ -211,7 +210,120 @@ def search():
             conn.close()
 
 ################################################################
+
+def log_changes(action, registration_number, product_name):
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Create change_log table if it doesn't exist
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS change_log (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            action VARCHAR(50) NOT NULL,
+            registration_number INT NOT NULL,
+            product_name VARCHAR(255) NOT NULL,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+        cursor.execute(create_table_query)
+        conn.commit()
+
+        # Get current date and time
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Insert log entry into the database
+        insert_query = "INSERT INTO change_log (action, registration_number, product_name, timestamp) VALUES (%s, %s, %s, %s)"
+        data = (action, registration_number, product_name, current_datetime)
+        cursor.execute(insert_query, data)
+        conn.commit()
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+################################################################
+
+def unarchive(registration):
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Check if the product exists in the archive
+        query = "SELECT * FROM archive WHERE registration = %s"
+        cursor.execute(query, (registration,))
+        existing_product = cursor.fetchone()
+
+        if existing_product:
+            # Product exists in the archive, proceed with unarchiving
+            # Extract data from the archive
+            registration, name, category, description, date, price, quantity, attributes, supplier, image = existing_product
+
+            # Insert the record back into the products table
+            unarchive_query = """
+                INSERT INTO products 
+                (registration, name, category, description, date, price, quantity, attributes, supplier, image) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            cursor.execute(unarchive_query, existing_product[:-1])
+            conn.commit()
+
+            # Delete the record from the archive table
+            delete_query = "DELETE FROM archive WHERE registration = %s"
+            cursor.execute(delete_query, (registration,))
+            conn.commit()
+
+            log_changes("unarchived", registration, name)
+            messagebox.showinfo('Info', 'Product unarchived successfully!')
             
+        else:
+            # Product does not exist in the archive
+            messagebox.showerror('Error', 'Product does not exist in the archive.')
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+        messagebox.showerror('Error', 'Failed to unarchive product.')
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+################################################################
+            
+def on_item_select(event):
+    try:
+        # Get the selected item
+        selected_item = treeview.focus()
+
+        # Get the registration number from the selected item
+        registration = treeview.item(selected_item, 'values')[0]
+
+        # Call the unarchive function with the registration number
+        unarchive(registration)
+
+    except IndexError:
+        # Handle the case where no item is selected
+        messagebox.showerror('Error', 'Please select a product.')
+        
+################################################################
+                 
 def on_enter(e):
     search_entry.delete(0, 'end')
 
@@ -296,6 +408,9 @@ footer = Label(root,  width=10, font='Helvetica 10 bold', height=3, bg=framebg, 
 footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
+
+unarchive_button=Button(footer, text="Unarchive", bg='#704214', border=0, command=unarchive, font='Helvetica 10 bold', fg='White', width=15, height=2)
+unarchive_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 exit_button = Button(footer, text='Exit', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
 exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
