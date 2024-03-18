@@ -27,6 +27,15 @@ style.map("Treeview", foreground=[('selected', 'black')], background=[('selected
 style.configure("Treeview", fieldbackground=framebg)  # Set field background color
 style.configure("Treeview.Treeitem", background=framebg, fieldbackground=framebg, foreground ="white")  # Set item background color
 
+# Connect to MySQL database
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="LTS",
+    port=3306
+)
+mycursor = mydb.cursor()
 
 ################################################################
 
@@ -256,54 +265,46 @@ def log_changes(action, registration_number, product_name):
 
 def unarchive(registration):
     try:
-        conn = mysql.connector.connect(
+        # Connect to MySQL database
+        connection = mysql.connector.connect(
             host="localhost",
             user="root",
             password="",
             database="LTS",
             port=3306
         )
-        cursor = conn.cursor()
 
-        # Check if the product exists in the archive
-        query = "SELECT * FROM archive WHERE registration = %s"
-        cursor.execute(query, (registration,))
-        existing_product = cursor.fetchone()
+        cursor = connection.cursor()
 
-        if existing_product:
-            # Product exists in the archive, proceed with unarchiving
-            # Extract data from the archive
-            registration, name, category, description, date, price, quantity, attributes, supplier, image = existing_product
+        # Fetch data of the selected product from the archive table
+        cursor.execute("SELECT * FROM archive WHERE registration = %s", (registration,))
+        product_data = cursor.fetchone()
 
-            # Insert the record back into the products table
-            unarchive_query = """
-                INSERT INTO products 
-                (registration, name, category, description, date, price, quantity, attributes, supplier, image) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-            cursor.execute(unarchive_query, existing_product[:-1])
-            conn.commit()
+        if product_data:
+            # Insert data into the product table
+            insert_query = "INSERT INTO product (registration, name, category, description, date, price, quantity, attributes, supplier, image) VALUES (%s, %s, %s, %s)"
+            cursor.execute(insert_query, product_data[0:4])
 
-            # Delete the record from the archive table
+            # Delete data from the archive table
             delete_query = "DELETE FROM archive WHERE registration = %s"
             cursor.execute(delete_query, (registration,))
-            conn.commit()
 
-            log_changes("unarchived", registration, name)
-            messagebox.showinfo('Info', 'Product unarchived successfully!')
-            
+            # Commit changes
+            connection.commit()
+
+            print("Product successfully unarchived and moved to product table.")
         else:
-            # Product does not exist in the archive
-            messagebox.showerror('Error', 'Product does not exist in the archive.')
+            print("No data found for the selected registration in the archive table.")
 
-    except mysql.connector.Error as e:
-        print("Error:", e)
-        messagebox.showerror('Error', 'Failed to unarchive product.')
+    except mysql.connector.Error as error:
+        print("Error:", error)
 
     finally:
-        if conn.is_connected():
+        # Close connection
+        if connection.is_connected():
             cursor.close()
-            conn.close()
+            connection.close()    
+    
 
 ################################################################
             
@@ -316,12 +317,12 @@ def on_item_select(event):
         registration = treeview.item(selected_item, 'values')[0]
 
         # Call the unarchive function with the registration number
-        unarchive(registration)
+        unarchive()
 
     except IndexError:
         # Handle the case where no item is selected
         messagebox.showerror('Error', 'Please select a product.')
-        
+
 ################################################################
                  
 def on_enter(e):
