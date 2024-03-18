@@ -54,6 +54,10 @@ def archive():
     subprocess.Popen(['python', 'lib/archive.py'])
     root.destroy()
 
+def orderlogs():
+    subprocess.Popen(['python', 'lib/orderlogs.py'])
+    root.destroy()
+
 ################################################################
     
 def load_data():
@@ -265,11 +269,60 @@ def log_changes(action, registration_number, product_name):
 
 #################################################################
 
+def order_log(registration_number, product_name, amount_ordered, price):
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Create order_log table if it doesn't exist
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS order_log (
+            order_id INT AUTO_INCREMENT PRIMARY KEY,
+            registration_number INT NOT NULL,
+            product_name VARCHAR(255) NOT NULL,
+            amount_sold INT NOT NULL,
+            price DECIMAL(10, 2) NOT NULL,
+            total_price DECIMAL(10, 2) NOT NULL,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+        cursor.execute(create_table_query)
+        conn.commit()
+
+        amount_ordered = int(amount_ordered)
+        price = float(price)    
+        
+        # Calculate total price
+        total_price = amount_ordered * price
+
+        # Insert log entry into the database
+        insert_query = "INSERT INTO order_log (registration_number, product_name, amount_sold, price, total_price) VALUES (%s, %s, %s, %s, %s)"
+        data = (registration_number, product_name, amount_ordered, price, total_price)
+        cursor.execute(insert_query, data)
+        conn.commit()
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+#################################################################
+
 def submit_order(product_data, registration_number, product_name):
     # Function to handle making an order for the selected product
     def submit_order():
-        # Get the amount ordered from the Entry widget
+        # Get the amount ordered and price from the Entry widgets
         amount_ordered = amount_entry.get()
+        price = int(price_entry.get())
 
         # Connect to the MySQL database
         conn = mysql.connector.connect(
@@ -292,16 +345,20 @@ def submit_order(product_data, registration_number, product_name):
 
         # Log the changes
         log_changes("sold", registration_number, product_name)
+        order_log(registration_number, product_name, amount_ordered, price)
 
-        # Print a confirmation message
-        print(f"Ordered {amount_ordered} of {product_data[1]}")
+        # Create a new Toplevel window for order confirmation
+        order_confirmation_window = Toplevel()
+        order_confirmation_window.title("Order Confirmation")
+
+        # Display order confirmation message
+        confirmation_label = Label(order_confirmation_window, text=f"Ordered {amount_ordered} of {product_data[1]}")
+        confirmation_label.pack()
+
+        refresh_treeview()
 
         # Close the order window
         order_window.destroy()
-
-        # Refresh the TreeView
-        refresh_treeview()
-        refresh_label()
 
     # Create a new Toplevel window for the order
     order_window = Toplevel()
@@ -312,12 +369,20 @@ def submit_order(product_data, registration_number, product_name):
     amount_entry = Entry(order_window)
     amount_entry.grid(row=0, column=1, padx=5, pady=5)
 
+    # Add label and entry for price
+    Label(order_window, text="Price:").grid(row=1, column=0, padx=5, pady=5)
+    price_entry = Entry(order_window)
+    price_entry.grid(row=1, column=1, padx=5, pady=5)
+
     # Add a button to submit the order
     submit_button = Button(order_window, text="Submit Order", command=submit_order)
-    submit_button.grid(row=1, columnspan=2, padx=5, pady=5)
+    submit_button.grid(row=2, columnspan=2, padx=5, pady=5)
 
     # Make amount_entry accessible within the function
     submit_order.amount_entry = amount_entry  # Assigning to a function attribute
+
+    # Populate the price entry with the price of the selected item
+    price_entry.insert(0, product_data[5])  # Assuming price is at index 2 in product_data
 
 #################################################################
 
@@ -361,14 +426,21 @@ def on_item_select(event):
     # Get the selected item
     selected_item = treeview.focus()
 
-    # Get the registration number from the selected item
-    registration = treeview.item(selected_item, 'values')[0] 
-
-    # Fetch data based on the selected item
-    data = fetch_data(registration)
-
-    # Display the fetched data
-    select_product_for_order(data)
+    # Check if there's a selected item
+    if selected_item:
+        # Get the registration number from the selected item
+        values = treeview.item(selected_item, 'values')
+        if values:
+            registration = values[0]
+    
+            # Fetch data based on the selected item
+            data = fetch_data(registration)
+    
+            select_product_for_order(data)
+        else:
+            print("No values associated with the selected item")
+    else:
+        print("No item selected")
 
 #################################################################
 
@@ -377,10 +449,8 @@ def refresh_treeview():
     for child in treeview.get_children():
         treeview.delete(child)
     
+    # Load new data into the TreeView
     load_data()
-
-def refresh_label():
-    select_product_for_order()
 
 #################################################################
 
@@ -411,6 +481,9 @@ search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 imageicon1 = PhotoImage(file='images/back_button.png')
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
+
+orderhistory_button = Button(label, text='Order History', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=orderlogs, border=0)
+orderhistory_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 archive_button = Button(label, text='Archive', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
 archive_button.pack(side=LEFT, padx=5, pady=0, anchor="e")

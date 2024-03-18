@@ -93,7 +93,7 @@ def load_data():
     cursor = connection.cursor()
 
     # Execute query to select data from the table
-    cursor.execute("SELECT id, action, registration_number, product_name, timestamp FROM change_log")
+    cursor.execute("SELECT order_id, registration_number, product_name, amount_sold, price, total_price, timestamp FROM order_log")
 
     # Fetch all rows from the query result
     rows = cursor.fetchall()
@@ -227,7 +227,7 @@ def on_leave(e):
 #### HEADER ####
 
 # Label
-label = Label(root, text='History', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
+label = Label(root, text='Order History', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
 # Search button
@@ -268,14 +268,14 @@ fscroll.pack(side="right", fill="y")
 hscroll = ttk.Scrollbar(f, orient="horizontal", style="Horizontal.TScrollbar")
 hscroll.pack(side="bottom", fill="x")
 
-cols = ("id", "action", "registration_number", "product_name", "timestamp")
+cols = ("order_id", "registration_number", "product_name", "amount_sold", "price", "total_price", "timestamp")
 
 # Create Treeview widget
 treeview = SortableTreeview(f, show="headings", columns=cols, height=12)
 treeview.pack(side=TOP, fill="both", anchor="nw", expand=True)
 
 # Configure column width for each column
-column_widths = {"id": 70, "action": 70, "registration_number": 70, "product_name": 70, "timestamp": 70}
+column_widths = {"order_id": 70, "registration_number": 70, "product_name": 70, "amount_sold": 70, "price": 70, "total_price": 70, "timestamp": 70}
 for col, width in column_widths.items():
     treeview.column(col, width=width)
 
@@ -284,7 +284,7 @@ fscroll.config(command=treeview.yview)
 hscroll.config(command=treeview.xview)
 
 # Set headings using SortableTreeview's set_heading method
-heading_map = {"id": "#1", "action": "#2", "registration_number": "#3", "product_name": "#4", "timestamp": "#5"}
+heading_map = {"order_id": "#1", "registration_number": "#2", "product_name": "#3", "amount_sold": "#4", "price": "#5", "total_price": "#6", "timestamp": "#7"}
 treeview.set_heading(heading_map)
 
 for col, col_id in heading_map.items():

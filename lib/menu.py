@@ -73,13 +73,4 @@ imageicon7 = PhotoImage(file='images/history.png')
 database = Button(button_frame, image=imageicon7, bg='#c19a6b', border=0, command=open_history)
 database.grid(row=1, column=2)
 
-
-clock_frame = Frame(label, bg="#c19a6b")
-clock_frame.pack(expand=True)
-
-lbl_clock=Label(clock_frame, text="Welcome to Inventory Management System\t\t Date: DD-MM-YYY Time: HH-MM-SS", compound=LEFT, font=("Helvetica", 10, "bold"), bg="white", fg="black", anchor="w", padx=20)
-lbl_clock.grid(row=0, column=2)
-
-
-
 root.mainloop()
