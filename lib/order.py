@@ -1,5 +1,4 @@
 from tkinter import *
-from datetime import date
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image, ImageTk
@@ -362,7 +361,7 @@ def on_item_select(event):
     selected_item = treeview.focus()
 
     # Get the registration number from the selected item
-    registration = treeview.item(selected_item, 'values')[0]  # Assuming registration is the first value
+    registration = treeview.item(selected_item, 'values')[0]
 
     # Fetch data based on the selected item
     data = fetch_data(registration)

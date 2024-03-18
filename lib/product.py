@@ -1,5 +1,5 @@
 from tkinter import *
-from datetime import date
+from datetime import datetime
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image, ImageTk
@@ -13,6 +13,7 @@ from PIL import Image, ImageTk
 import os
 from mysql.connector import Error
 import io
+
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -51,10 +52,6 @@ def add():
 
 def archive():
     subprocess.Popen(['python', 'lib/archive.py'])
-    root.destroy()
-
-def order():
-    subprocess.Popen(['python', 'lib/order.py'])
     root.destroy()
 
 ################################################################
@@ -224,16 +221,120 @@ def display_image(obj, image_data):
 
 #################################################################
 
-def display_product_details(data):
-    # Check if the LabelFrame widget exists before destroying it
+def log_changes(action, registration_number, product_name):
+    
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Create change_log table if it doesn't exist
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS change_log (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            action VARCHAR(50) NOT NULL,
+            registration_number INT NOT NULL,
+            product_name VARCHAR(255) NOT NULL,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+        cursor.execute(create_table_query)
+        conn.commit()
+
+        # Get current date and time
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Insert log entry into the database
+        insert_query = "INSERT INTO change_log (action, registration_number, product_name, timestamp) VALUES (%s, %s, %s, %s)"
+        data = (action, registration_number, product_name, current_datetime)
+        cursor.execute(insert_query, data)
+        conn.commit()
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+#################################################################
+
+def submit_order(product_data, registration_number, product_name):
+    # Function to handle making an order for the selected product
+    def submit_order():
+        # Get the amount ordered from the Entry widget
+        amount_ordered = amount_entry.get()
+
+        # Connect to the MySQL database
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Update the quantity in the database
+        cursor.execute("UPDATE products SET quantity = quantity - %s WHERE registration = %s", (amount_ordered, product_data[0]))
+
+        # Commit the transaction
+        conn.commit()
+
+        # Close the database connection
+        conn.close()
+
+        # Log the changes
+        log_changes("sold", registration_number, product_name)
+
+        # Print a confirmation message
+        print(f"Ordered {amount_ordered} of {product_data[1]}")
+
+        # Close the order window
+        order_window.destroy()
+
+        # Refresh the TreeView
+        refresh_treeview()
+        refresh_label()
+
+    # Create a new Toplevel window for the order
+    order_window = Toplevel()
+    order_window.title("Make Order")
+    
+    # Add labels and entry for amount
+    Label(order_window, text="Amount Ordered:").grid(row=0, column=0, padx=5, pady=5)
+    amount_entry = Entry(order_window)
+    amount_entry.grid(row=0, column=1, padx=5, pady=5)
+
+    # Add a button to submit the order
+    submit_button = Button(order_window, text="Submit Order", command=submit_order)
+    submit_button.grid(row=1, columnspan=2, padx=5, pady=5)
+
+    # Make amount_entry accessible within the function
+    submit_order.amount_entry = amount_entry  # Assigning to a function attribute
+
+#################################################################
+
+def select_product_for_order(data):
+    # Assuming data contains product information
+    registration_number = data[0]
+    product_name = data[1]
+
+    # Check if the Frame widget exists before destroying it
     if 'obj' in globals():
         clear_product_details()
 
     if data:
-        # Create a new LabelFrame widget to display product details
+        # Create a new Frame widget to display product details
         global obj
-        obj = LabelFrame(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
-        obj.pack(side=TOP, anchor="n", padx=10,pady=10, fill='x')
+        obj = Frame(root, bd=0, width=350, bg=framebg, relief=GROOVE)
+        obj.pack(side=TOP, anchor="n", padx=10, pady=10, fill='x')
 
         # Labels for database fields
         labels = ['Product No:', 'Product Name:', 'Category:', 'Description:', 'Date:', 'Price:', 'Quantity:', 'Attributes:', 'Supplier:', "Image:"]
@@ -244,12 +345,15 @@ def display_product_details(data):
             if label_text == 'Image:':
                 display_image(obj, value)  # Call the display_image function
             else:
-                Label(obj, text=label_text, font='Arial 10 bold', fg='white', bg=framebg).grid(row=rows, column=0, sticky="w", padx=(10,0), pady=3)
+                Label(obj, text=label_text, font='Arial 10 bold', fg='white', bg=framebg).grid(row=rows, column=0, sticky="w", padx=(10, 0), pady=3)
                 Label(obj, text=value, font='Arial 10', bg=framebg, fg='white').grid(row=rows, column=1, sticky="w", padx=0, pady=3)
             rows += 1
+
+        # Button to select the product for making orders
+        Button(obj, text="Select for Order", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name)).grid(row=rows, columnspan=2, pady=10)
     else:
         # If data is None, display a message indicating no data found
-        Label(root, text="No data found for selected registration", font='Arial 10 bold', fg='red').pack()
+        Label(root, text="No data found for selected product", font='Arial 10 bold', fg='red').pack()
 
 #################################################################
 
@@ -258,13 +362,25 @@ def on_item_select(event):
     selected_item = treeview.focus()
 
     # Get the registration number from the selected item
-    registration = treeview.item(selected_item, 'values')[0]  # Assuming registration is the first value
+    registration = treeview.item(selected_item, 'values')[0] 
 
     # Fetch data based on the selected item
     data = fetch_data(registration)
 
     # Display the fetched data
-    display_product_details(data)
+    select_product_for_order(data)
+
+#################################################################
+
+def refresh_treeview():
+    # Clear existing nodes
+    for child in treeview.get_children():
+        treeview.delete(child)
+    
+    load_data()
+
+def refresh_label():
+    select_product_for_order()
 
 #################################################################
 
@@ -295,9 +411,6 @@ search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 imageicon1 = PhotoImage(file='images/back_button.png')
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
-
-order_button = Button(label, text='Order', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=order, border=0)
-order_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 archive_button = Button(label, text='Archive', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
 archive_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
@@ -356,21 +469,6 @@ obj.pack(side=TOP, anchor="n", padx = 10, pady = 10, fill='x')
 labels = ['Product No:', 'Product Name:', 'Category:', 'Description:', 'Date:', 'Price:', 'Quantity:', 'Attributes:', 'Supplier:', 'Image:']
 
 ################################################################
-'''
-imageFrame = Frame(root, bg=framebg, bd=0)
-imageFrame.pack(side=TOP, anchor="center")
-
-Label(imageFrame, text="Product Image: ", font='Helvetica 10 bold', bg=framebg, fg='white').grid(row=0, column=1, padx=10, pady=10, sticky="we")
-
-
-f=Frame(imageFrame, bd=1, bg='#704214', width=200, height=200,relief=GROOVE, border=0)
-f.grid(row=1, column=1, padx=20, pady=5, sticky='we')
-
-img=PhotoImage(file='images/upload_photo.png')
-lbl=Label(f, bg='#704214', image=img)
-lbl.place(x=5, y=5)
-'''
-##################################################################
 
  
 root.mainloop()

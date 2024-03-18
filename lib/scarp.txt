@@ -185,7 +185,7 @@ def signup_command():
         messagebox.showerror("Invalid Credentials", "Please enter correct username")
 """
 
-'''
+"""
 file=pathlib.Path('Products.xlsx')
 if file.exists():
     pass
@@ -203,7 +203,7 @@ else:
     sheet['I1']='Manufacturer/Supplier'
 
     file.save('Products.xlsx')
-'''
+"""
 
 """
     if username=='admin' and password=='password': 
@@ -269,3 +269,31 @@ def insert_image(filename, image_data):
         if connection.is_connected():
             cursor.close()
             connection.close()
+
+
+def display_product_details(data):
+    # Check if the LabelFrame widget exists before destroying it
+    if 'obj' in globals():
+        clear_product_details()
+
+    if data:
+        # Create a new LabelFrame widget to display product details
+        global obj
+        obj = LabelFrame(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
+        obj.pack(side=TOP, anchor="n", padx=10,pady=10, fill='x')
+
+        # Labels for database fields
+        labels = ['Product No:', 'Product Name:', 'Category:', 'Description:', 'Date:', 'Price:', 'Quantity:', 'Attributes:', 'Supplier:', "Image:"]
+
+        # Display labels and corresponding data
+        rows = 1
+        for label_text, value in zip(labels, data):
+            if label_text == 'Image:':
+                display_image(obj, value)  # Call the display_image function
+            else:
+                Label(obj, text=label_text, font='Arial 10 bold', fg='white', bg=framebg).grid(row=rows, column=0, sticky="w", padx=(10,0), pady=3)
+                Label(obj, text=value, font='Arial 10', bg=framebg, fg='white').grid(row=rows, column=1, sticky="w", padx=0, pady=3)
+            rows += 1
+    else:
+        # If data is None, display a message indicating no data found
+        Label(root, text="No data found for selected registration", font='Arial 10 bold', fg='red').pack()
