@@ -224,7 +224,7 @@ def on_leave(e):
 #### HEADER ####
 
 # Label
-label = Label(root, text='Database', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
+label = Label(root, text='Inventory', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
 # Search button

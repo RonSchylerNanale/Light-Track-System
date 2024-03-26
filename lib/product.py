@@ -317,6 +317,32 @@ def order_log(registration_number, product_name, amount_ordered, price):
 
 #################################################################
 
+cart_items = []
+
+
+def add_to_cart(product_data, registration_number, amount_ordered, price):
+    # Add the selected product to the cart
+    cart_items.append({
+        "registration_number": registration_number,
+        "product_name": product_data[1],
+        "amount_ordered": amount_ordered,
+        "price": price
+    })
+    messagebox.showinfo("Success", "Product added to cart.")
+
+#################################################################
+
+def display_cart():
+    # Create a new window for displaying the cart
+    cart_window = Toplevel()
+    cart_window.title("Cart")
+
+    # Display cart items
+    for idx, item in enumerate(cart_items):
+        Label(cart_window, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}").pack()
+
+#################################################################
+
 def submit_order(product_data, registration_number, product_name):
     # Function to handle making an order for the selected product
     def submit_order():
@@ -324,38 +350,8 @@ def submit_order(product_data, registration_number, product_name):
         amount_ordered = amount_entry.get()
         price = int(price_entry.get())
 
-        # Connect to the MySQL database
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="LTS",
-            port=3306
-        )
-        cursor = conn.cursor()
-
-        # Update the quantity in the database
-        cursor.execute("UPDATE products SET quantity = quantity - %s WHERE registration = %s", (amount_ordered, product_data[0]))
-
-        # Commit the transaction
-        conn.commit()
-
-        # Close the database connection
-        conn.close()
-
-        # Log the changes
-        log_changes("sold", registration_number, product_name)
-        order_log(registration_number, product_name, amount_ordered, price)
-
-        # Create a new Toplevel window for order confirmation
-        order_confirmation_window = Toplevel()
-        order_confirmation_window.title("Order Confirmation")
-
-        # Display order confirmation message
-        confirmation_label = Label(order_confirmation_window, text=f"Ordered {amount_ordered} of {product_data[1]}")
-        confirmation_label.pack()
-
-        refresh_treeview()
+        # Add the product to the cart
+        add_to_cart(product_data, registration_number, amount_ordered, price)
 
         # Close the order window
         order_window.destroy()
@@ -375,7 +371,7 @@ def submit_order(product_data, registration_number, product_name):
     price_entry.grid(row=1, column=1, padx=5, pady=5)
 
     # Add a button to submit the order
-    submit_button = Button(order_window, text="Submit Order", command=submit_order)
+    submit_button = Button(order_window, text="Add to Cart", command=submit_order)
     submit_button.grid(row=2, columnspan=2, padx=5, pady=5)
 
     # Make amount_entry accessible within the function
@@ -415,7 +411,7 @@ def select_product_for_order(data):
             rows += 1
 
         # Button to select the product for making orders
-        Button(obj, text="Select for Order", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name)).grid(row=rows, columnspan=2, pady=10)
+        Button(obj, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name)).grid(row=rows, columnspan=2, pady=10)
     else:
         # If data is None, display a message indicating no data found
         Label(root, text="No data found for selected product", font='Arial 10 bold', fg='red').pack()
@@ -460,13 +456,22 @@ def refresh_treeview():
 label = Label(root, text='Product', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
+imageicon5 = PhotoImage(file='images/cart.png')
+view_cart_button = Button(label, image=imageicon5, command=display_cart, bg='#704214', fg='white', bd=0)
+view_cart_button.pack(side=RIGHT, padx=0, pady=0, anchor="e")
+
 imageicon4 = PhotoImage(file='images/add.png')
 search_button = Button(label, image=imageicon4, bg='#704214', fg='white', font='Helvetica 13 bold', command=add, bd=0)
 search_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
 
+# Back button
+imageicon1 = PhotoImage(file='images/back_button.png')
+back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
+back_button.pack(side=LEFT, padx=10, pady=15, anchor="nw")
+
 imageicon3 = PhotoImage(file='images/search.png')
 search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
-search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
+search_button.pack(side=LEFT, padx=0, pady=10, anchor="e")
 
 # search box
 Search = StringVar()
@@ -475,18 +480,15 @@ search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
 search_entry.bind("<FocusOut>", on_leave)
-search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
+search_entry.pack(side=LEFT, padx=0, pady=10, anchor="e")
 
-# Back button
-imageicon1 = PhotoImage(file='images/back_button.png')
-back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
-back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
+orderhistory_button = Button(label, text='Order History', width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=orderlogs, border=0)
+orderhistory_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-orderhistory_button = Button(label, text='Order History', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=orderlogs, border=0)
-orderhistory_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
+archive_button = Button(label, text='Archive', width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
+archive_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-archive_button = Button(label, text='Archive', width=15, height=2, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
-archive_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
+
 
 #################################################################
 

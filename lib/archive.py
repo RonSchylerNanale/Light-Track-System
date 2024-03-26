@@ -83,7 +83,7 @@ def Exit():
 ################################################################
     
 def back():
-    subprocess.Popen(['python', 'lib/menu.py'])
+    subprocess.Popen(['python', 'lib/product.py'])
     root.destroy() 
 
 ################################################################

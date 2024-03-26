@@ -7,7 +7,7 @@ import subprocess
 
 window = Tk()
 window.title("Sign Up")
-window.geometry('800x600')
+window.geometry('800x600+0+0')
 window.configure(bg = "#c19a6b")
 window.resizable(True,True)
 
