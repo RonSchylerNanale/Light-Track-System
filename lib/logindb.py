@@ -18,50 +18,51 @@ framefg = "#c19a6b"
 
 #########################################################################
 
-def signin():
+MAX_ATTEMPTS = 5
+attempts = 0  # Moved attempts variable outside the signin function
 
-    # Get username and password from the entry fields or wherever you're getting them
+def signin():
+    global attempts  # Declare attempts as global to access and modify it
     username = user.get()
     password = code.get()
 
-
-    # Connect to MySQL database
     try:
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
             password="",
             database="LTS",
-            port = 3306
+            port=3306
         )
-        
         cursor = conn.cursor()
-
-        # Execute SQL query to fetch user data
         query = "SELECT password FROM users WHERE username = %s"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
 
         if result and result[0] == password:
-            # Successful login
             global logged_in_username
             logged_in_username = username
             subprocess.Popen(['python', 'lib/menu.py'])
             window.destroy()
         else:
-            # Invalid username or password
-            messagebox.showerror('Invalid', 'Invalid Username or Password')
+            attempts += 1
+            if attempts >= MAX_ATTEMPTS:
+                show_forgot_password_button()
+            else:
+                messagebox.showerror('Invalid', 'Invalid Username or Password')
 
     except mysql.connector.Error as e:
-        # Handle connection errors
         print("Error connecting to MySQL:", e)
         messagebox.showerror('Error', 'Error connecting to database')
 
     finally:
-        # Close database connection
         if 'conn' in locals() and conn.is_connected():
             cursor.close()
             conn.close()
+
+def show_forgot_password_button():
+    forgot_password_button = Button(frame, text="Forgot Password?", border=0, bg="#c19a6b", cursor='hand2', fg='white', command=forgot_pass)
+    forgot_password_button.grid(row=10, column=0, columnspan=2, pady=5)
             
 #########################################################################
 
@@ -100,7 +101,7 @@ def on_leave(e):
     if name=='':
         user.insert(0, 'Username')
 
-################################################################
+#########################################################################
     
 # Create a frame for the main content
 frame = Frame(window, bg="#c19a6b")
@@ -167,7 +168,6 @@ Button(frame, width=20, pady=7, text='Sign in', bg='#704214', fg='white', border
 
 # Buttons for Create Account and Forgot Password
 Button(frame, width=15, text='Create Account', border=0, bg="#c19a6b", cursor='hand2', fg='white', command=open_signup).grid(row=9, column=0, columnspan=2, pady=5)
-Button(frame, width=15, text='Forgot Password', border=0, bg="#c19a6b", cursor='hand2', fg='white', command=forgot_pass).grid(row=10, column=0, columnspan=2, pady=5)
 
 
 window.mainloop()
