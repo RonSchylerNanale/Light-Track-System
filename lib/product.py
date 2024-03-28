@@ -417,7 +417,7 @@ def select_product_for_order(data):
         Label(root, text="No data found for selected product", font='Arial 10 bold', fg='red').pack()
 
 #################################################################
-
+        
 def on_item_select(event):
     # Get the selected item
     selected_item = treeview.focus()

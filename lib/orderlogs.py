@@ -27,7 +27,43 @@ style.map("Treeview", foreground=[('selected', 'black')], background=[('selected
 style.configure("Treeview", fieldbackground=framebg)  # Set field background color
 style.configure("Treeview.Treeitem", background=framebg, fieldbackground=framebg, foreground ="white")  # Set item background color
 
+def create_tables():
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
 
+        # Create the orders table if it doesn't exist
+        create_orders_table_query = """
+            CREATE TABLE IF NOT EXISTS order_log (
+                order_id INT AUTO_INCREMENT PRIMARY KEY,
+                registration_number VARCHAR(255),
+                product_name VARCHAR(255),
+                amount_sold INT,
+                price DECIMAL(10, 2),
+                total_price DECIMAL(10, 2),
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """
+        cursor.execute(create_orders_table_query)
+        conn.commit()
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+        messagebox.showerror('Error', 'Failed to create tables.')
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+# Call create_tables function before executing any other code
+create_tables()
 ################################################################
 
 class SortableTreeview(ttk.Treeview):
@@ -161,7 +197,7 @@ def export_to_excel(treeview):
     df = pd.DataFrame(data_list, columns=["id", "action", "registration_number", "product_name", "timestamp"])
 
     # Define the default file name with the current timestamp
-    default_file_name = "Current-Page-Log-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
+    default_file_name = "Current-Page-Order-Log-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
 
     # Ask user to choose filename and location
     filename = filedialog.asksaveasfilename(defaultextension=".xlsx", initialfile=default_file_name, filetypes=[("Excel files", "*.xlsx")])
