@@ -220,6 +220,50 @@ def search():
 
 ################################################################
 
+def unarchive():
+    selected_item = treeview.selection()
+    if not selected_item:
+        messagebox.showerror("Error", "Please select a product to unarchive.")
+        return
+
+    registration = treeview.item(selected_item)['values'][0]
+    
+    # Connect to MySQL database
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="LTS",
+        port=3306
+    )
+    cursor = conn.cursor()
+
+    # Fetch the product details from the archive table
+    cursor.execute("SELECT * FROM archive WHERE registration=%s", (registration,))
+    archived_product = cursor.fetchone()
+
+    if not archived_product:
+        messagebox.showerror("Error", "Selected product not found in archive.")
+        return
+
+    # Insert the archived product into the active table
+    insert_query = "INSERT INTO products (registration, name, category, description, date, price, quantity, attributes, supplier, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(insert_query, archived_product[:10])
+    conn.commit()
+
+    # Delete the product from the archive table
+    delete_query = "DELETE FROM archive WHERE registration=%s"
+    cursor.execute(delete_query, (registration,))
+    conn.commit()
+
+    # Log the unarchive action
+    log_changes("unarchived", registration, archived_product[1])
+
+    conn.close()
+    messagebox.showinfo("Success", "Product has been unarchived successfully.")
+
+################################################################
+
 def log_changes(action, registration_number, product_name):
     try:
         conn = mysql.connector.connect(
@@ -260,68 +304,6 @@ def log_changes(action, registration_number, product_name):
         if conn.is_connected():
             cursor.close()
             conn.close()
-
-################################################################
-
-def unarchive(registration):
-    try:
-        # Connect to MySQL database
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="LTS",
-            port=3306
-        )
-
-        cursor = connection.cursor()
-
-        # Fetch data of the selected product from the archive table
-        cursor.execute("SELECT * FROM archive WHERE registration = %s", (registration,))
-        product_data = cursor.fetchone()
-
-        if product_data:
-            # Insert data into the product table
-            insert_query = "INSERT INTO product (registration, name, category, description, date, price, quantity, attributes, supplier, image) VALUES (%s, %s, %s, %s)"
-            cursor.execute(insert_query, product_data[0:4])
-
-            # Delete data from the archive table
-            delete_query = "DELETE FROM archive WHERE registration = %s"
-            cursor.execute(delete_query, (registration,))
-
-            # Commit changes
-            connection.commit()
-
-            print("Product successfully unarchived and moved to product table.")
-        else:
-            print("No data found for the selected registration in the archive table.")
-
-    except mysql.connector.Error as error:
-        print("Error:", error)
-
-    finally:
-        # Close connection
-        if connection.is_connected():
-            cursor.close()
-            connection.close()    
-    
-
-################################################################
-            
-def on_item_select(event):
-    try:
-        # Get the selected item
-        selected_item = treeview.focus()
-
-        # Get the registration number from the selected item
-        registration = treeview.item(selected_item, 'values')[0]
-
-        # Call the unarchive function with the registration number
-        unarchive()
-
-    except IndexError:
-        # Handle the case where no item is selected
-        messagebox.showerror('Error', 'Please select a product.')
 
 ################################################################
                  

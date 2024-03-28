@@ -26,6 +26,70 @@ root.resizable(True,True)
 
 # Define a StringVar to hold the image data
 image_data_var = StringVar()
+
+import mysql.connector
+from tkinter import messagebox
+
+def create_tables():
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Create the products table if it doesn't exist
+        create_products_table_query = """
+            CREATE TABLE IF NOT EXISTS products (
+                registration VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
+                category VARCHAR(255),
+                description TEXT,
+                date DATE,
+                price DECIMAL(10, 2),
+                quantity INT,
+                attributes TEXT,
+                supplier VARCHAR(255),
+                image LONGBLOB
+            )
+        """
+        cursor.execute(create_products_table_query)
+        conn.commit()
+
+        # Create the archive table if it doesn't exist
+        create_archive_table_query = """
+            CREATE TABLE IF NOT EXISTS archive (
+                registration VARCHAR(255) PRIMARY KEY,
+                name VARCHAR(255),
+                category VARCHAR(255),
+                description TEXT,
+                date DATE,
+                price DECIMAL(10, 2),
+                quantity INT,
+                attributes TEXT,
+                supplier VARCHAR(255),
+                image LONGBLOB
+            )
+        """
+        cursor.execute(create_archive_table_query)
+        conn.commit()
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+        messagebox.showerror('Error', 'Failed to create tables.')
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+# Call create_tables function before executing any other code
+create_tables()
+
+
     
 def Exit():
     subprocess.Popen(['python', 'lib/product.py'])
@@ -61,9 +125,10 @@ def product_no():
 
     # Set the registration number accordingly
     if max_registration is not None:
-        Registration.set(max_registration + 1)
+        Registration.set(int(max_registration) + 1)  # Convert max_registration to int
     else:
-        Registration.set("1")        
+        Registration.set("1")
+     
 
 ################################################################
 
@@ -167,7 +232,7 @@ def Save():
             quantity INTEGER NOT NULL, 
             attributes VARCHAR(255) NOT NULL, 
             supplier VARCHAR(255) NOT NULL,
-            image BLOB 
+            image LONGBLOB 
         )
         """)
 
@@ -386,7 +451,6 @@ def delete():
 
 def archive():
     registration = Registration.get()
-    name = Name.get()
 
     try:
         conn = mysql.connector.connect(
@@ -398,45 +462,25 @@ def archive():
         )
         cursor = conn.cursor()
 
-        # Create the archive table if it doesn't exist
-        create_table_query = """
-            CREATE TABLE IF NOT EXISTS archive (
-                registration VARCHAR(255) PRIMARY KEY,
-                name VARCHAR(255),
-                category VARCHAR(255),
-                description TEXT,
-                date DATE,
-                price DECIMAL(10, 2),
-                quantity INT,
-                attributes TEXT,
-                supplier VARCHAR(255),
-                image LONGBLOB
-            )
-        """
-        cursor.execute(create_table_query)
-        conn.commit()
-
         # Check if the product exists
         query = "SELECT * FROM products WHERE registration = %s"
         cursor.execute(query, (registration,))
         existing_product = cursor.fetchone()
 
         if existing_product:
-            # Product exists, proceed with archiving
-            # Extract additional data to be archived
-            category = Category.get()
-            description = Description.get()
-            date = Date.get()
-            price = Price.get()
-            quantity = Quantity.get()
-            attributes = Attributes.get()
-            supplier = Supplier.get()
-            
-            img_data = None
-            if 'image' in globals() and image:
-                img_data = convertToBinary(image)  # Assuming convertToBinary is a function to convert image to binary data
-            # Insert the record into the archive table
+            # Extract product details
+            registration = existing_product[0]
+            name = existing_product[1]
+            category = existing_product[2]
+            description = existing_product[3]
+            date = existing_product[4]
+            price = existing_product[5]
+            quantity = existing_product[6]
+            attributes = existing_product[7]
+            supplier = existing_product[8]
+            img_data = existing_product[9]
 
+            # Insert the record into the archive table
             archive_query = """
                 INSERT INTO archive 
                 (registration, name, category, description, date, price, quantity, attributes, supplier, image) 
@@ -452,7 +496,7 @@ def archive():
 
             log_changes("archived", registration, name)
 
-            messagebox.showinfo('Info', 'Product archived successfully and deleted from products table!')
+            messagebox.showinfo('Info', 'Product archived successfully and removed from products table!')
             clear()  # Clear the entry fields
 
         else:
@@ -467,6 +511,7 @@ def archive():
         if conn.is_connected():
             cursor.close()
             conn.close()
+
 
 ################################################################
             
