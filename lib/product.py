@@ -317,38 +317,12 @@ def order_log(registration_number, product_name, amount_ordered, price):
 
 #################################################################
 
-cart_items = []
-
-
-def add_to_cart(product_data, registration_number, amount_ordered, price):
-    # Add the selected product to the cart
-    cart_items.append({
-        "registration_number": registration_number,
-        "product_name": product_data[1],
-        "amount_ordered": amount_ordered,
-        "price": price
-    })
-    messagebox.showinfo("Success", "Product added to cart.")
-
-#################################################################
-
-def display_cart():
-    # Create a new window for displaying the cart
-    cart_window = Toplevel()
-    cart_window.title("Cart")
-
-    # Display cart items
-    for idx, item in enumerate(cart_items):
-        Label(cart_window, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}").pack()
-
-#################################################################
-
 def submit_order(product_data, registration_number, product_name):
     # Function to handle making an order for the selected product
     def submit_order():
         # Get the amount ordered and price from the Entry widgets
         amount_ordered = amount_entry.get()
-        price = int(price_entry.get())
+        price = int(float(price_entry.get()))
 
         # Add the product to the cart
         add_to_cart(product_data, registration_number, amount_ordered, price)
@@ -372,13 +346,74 @@ def submit_order(product_data, registration_number, product_name):
 
     # Add a button to submit the order
     submit_button = Button(order_window, text="Add to Cart", command=submit_order)
-    submit_button.grid(row=2, columnspan=2, padx=5, pady=5)
+    submit_button.grid(row=2, columnspan=2, padx=0, pady=0)
 
     # Make amount_entry accessible within the function
     submit_order.amount_entry = amount_entry  # Assigning to a function attribute
 
     # Populate the price entry with the price of the selected item
     price_entry.insert(0, product_data[5])  # Assuming price is at index 2 in product_data
+
+#################################################################
+
+cart_items = []
+
+def add_to_cart(product_data, registration_number, amount_ordered, price):
+    # Add the selected product to the cart
+    cart_items.append({
+        "registration_number": registration_number,
+        "product_name": product_data[1],
+        "amount_ordered": amount_ordered,
+        "price": price
+    })
+    messagebox.showinfo("Success", "Product added to cart.")
+
+#################################################################
+cursor = mydb.cursor()
+
+def display_cart():
+    # Create a new window for displaying the cart
+    cart_window = Toplevel(root)
+    cart_window.title("Cart")
+
+    # Display cart items
+    for idx, item in enumerate(cart_items):
+        Label(cart_window, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}").pack(padx=10, pady=10)
+
+    # Define a function to handle checkout
+    def checkout(product_data, registration_number, product_name):
+        # Get the amount ordered, price, and product name from the Entry widgets
+        amount_ordered = int(submit_order.amount_entry.get())  # Assuming amount_entry is accessible here
+        price = float(submit_order.price_entry.get())  # Assuming price_entry is accessible here
+        product_name = product_data[1]  # Assuming product name is at index 1 in product_data
+
+        try:
+            # Update the quantity in the products table
+            update_query = "UPDATE products SET quantity = quantity - %s WHERE name = %s"
+            cursor.execute(update_query, (amount_ordered, product_name))
+            mydb.commit()
+
+            # Record the order in the orderlogs table
+            insert_query = "INSERT INTO order_log (registration_number, product_name, amount_sold, price, total_price) VALUES (%s, %s, %s, %s, %s)"
+            total_price = amount_ordered * price
+            cursor.execute(insert_query, (registration_number, product_name, amount_ordered, price, total_price))
+            mydb.commit()
+
+            # Display a confirmation message
+            confirmation_message = f"Transaction complete!\n\nProduct: {product_name}\nQuantity Ordered: {amount_ordered}\nTotal Price: {total_price}"
+            messagebox.showinfo("Transaction Complete", confirmation_message)
+
+            # Close the cart window after checkout
+            cart_window.destroy()
+
+        except mysql.connector.Error as error:
+            print("Failed to update quantity in the products table or record the order:", error)
+
+    # Assuming `cart_window` is defined elsewhere in your code
+
+    # Replace submit_button command with checkout
+    submit_button = Button(cart_window, text="Checkout", command=checkout)
+    submit_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
 
 #################################################################
 
@@ -464,7 +499,6 @@ imageicon4 = PhotoImage(file='images/add.png')
 search_button = Button(label, image=imageicon4, bg='#704214', fg='white', font='Helvetica 13 bold', command=add, bd=0)
 search_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
 
-# Back button
 imageicon1 = PhotoImage(file='images/back_button.png')
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=15, anchor="nw")

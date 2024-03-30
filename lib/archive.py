@@ -5,7 +5,6 @@ import tkinter as tk
 import pandas as pd
 import mysql.connector
 from datetime import datetime
-from tkinter import simpledialog
 from tkinter import messagebox
 from tkinter import filedialog
 

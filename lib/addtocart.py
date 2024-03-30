@@ -1,4 +1,9 @@
+from tkinter import *
 import tkinter as tk
+
+background = "#c19a6b"
+framebg = "#c19a6b"
+framefg = "#c19a6b"
 
 class ShoppingCartApp:
     def __init__(self, master):
@@ -7,7 +12,7 @@ class ShoppingCartApp:
         
         self.items = []
         
-        self.item_label = tk.Label(master, text="Items in Cart:")
+        self.item_label = tk.Label(master, text="Items in Cart:", bg=background)
         self.item_label.pack()
         
         self.item_listbox = tk.Listbox(master, height=10)
@@ -44,10 +49,11 @@ class ShoppingCartApp:
         self.items.clear()
         self.item_listbox.delete(0, tk.END)
 
-def main():
-    root = tk.Tk()
-    app = ShoppingCartApp(root)
-    root.mainloop()
+root = Tk()
+root.title("Light Track System")
+root.geometry("800x600+0+0")
+root.config(bg=background)
+root.resizable(True,True)
 
-if __name__ == "__main__":
-    main()
+app = ShoppingCartApp(root)
+root.mainloop()

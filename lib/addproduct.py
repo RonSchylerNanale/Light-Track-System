@@ -512,7 +512,6 @@ def archive():
             cursor.close()
             conn.close()
 
-
 ################################################################
             
 def log_changes(action, registration_number, product_name):
@@ -644,7 +643,6 @@ supply_entry.grid(row=6, column=2, padx=10, pady=10)
 archive_button=Button(obj, text="Archive", bg='#704214', border=0, command=archive, font='Helvetica 10 bold', fg='White', width=15, height=2)
 archive_button.grid(row=8, column=0, padx=20, pady=10)
 
-
 delete_button=Button(obj, text="Delete", bg='#704214', border=0, command=delete, font='Helvetica 10 bold', fg='White', width=15, height=2)
 delete_button.grid(row=7, column=0, padx=20, pady=10)
 
@@ -671,7 +669,6 @@ uploadButton.grid(row=3, column=1, padx=10, pady=10)
 
 buttonFrame = Frame(root, bg=framebg, bd=0)
 buttonFrame.pack(side=BOTTOM, anchor="n")
-
 
 saveButton = Button(buttonFrame, text='Save', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', border=0, command= Save)
 saveButton.grid(row=1, column=2, padx=10, pady=10)
