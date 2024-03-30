@@ -323,9 +323,11 @@ def submit_order(product_data, registration_number, product_name):
         # Get the amount ordered and price from the Entry widgets
         amount_ordered = amount_entry.get()
         price = int(float(price_entry.get()))
-
+        
         # Add the product to the cart
         add_to_cart(product_data, registration_number, amount_ordered, price)
+
+        log_changes("sold", registration_number, product_name)
 
         # Close the order window
         order_window.destroy()
@@ -356,6 +358,8 @@ def submit_order(product_data, registration_number, product_name):
     # Populate the price entry with the price of the selected item
     price_entry.insert(0, product_data[5])  # Assuming price is at index 5 in product_data
 
+
+
 #################################################################
 
 cart_items = []
@@ -371,8 +375,6 @@ def add_to_cart(product_data, registration_number, amount_ordered, price):
     messagebox.showinfo("Success", "Product added to cart.")
 
 #################################################################
-
-
 
 cursor = mydb.cursor()
 
