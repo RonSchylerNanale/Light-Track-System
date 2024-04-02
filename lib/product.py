@@ -358,8 +358,6 @@ def submit_order(product_data, registration_number, product_name):
     # Populate the price entry with the price of the selected item
     price_entry.insert(0, product_data[5])  # Assuming price is at index 5 in product_data
 
-
-
 #################################################################
 
 cart_items = []
@@ -382,6 +380,12 @@ def display_cart():
     # Create a new window for displaying the cart
     cart_window = Toplevel(root)
     cart_window.title("Cart")
+    cart_window.geometry("300x500+600+40")
+    cart_window.configure(bg=background)  # Set background color to white
+
+     # Check if cart_items is empty
+    if not cart_items:
+        Label(cart_window, text="No items added", bg=background, fg="white").pack(padx=10, pady=10)
 
     # Define a function to handle checkout
     def checkout(registration_number, product_data, amount_ordered, price):
@@ -422,12 +426,15 @@ def display_cart():
 
     # Define a function to handle checkout for all items
     def checkout_all():
-        for item in cart_items:
-            checkout(item['registration_number'], item, item['amount_ordered'], item['price'])
+        if not cart_items:
+            messagebox.showerror("Error", "No items on cart")
+        else:
+            for item in cart_items:
+                checkout(item['registration_number'], item, item['amount_ordered'], item['price'])
 
     # Add a single Checkout button for all items
-    submit_button = Button(cart_window, text="Checkout", command=checkout_all)
-    submit_button.pack(side=TOP, padx=10, pady=10)
+    submit_button = Button(cart_window, text="Checkout", bg="#704214", fg="white", command=checkout_all)
+    submit_button.pack(side=BOTTOM, padx=10, pady=10)
 
 #################################################################
 
