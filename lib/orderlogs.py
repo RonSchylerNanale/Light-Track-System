@@ -210,7 +210,7 @@ def export_to_excel(treeview):
 
 def search():
     text = Search.get().lower()  # Convert search text to lowercase for case-insensitive search
-    
+
     # Clear any previous selection in the Treeview
     treeview.selection_remove(treeview.selection())
 
@@ -225,7 +225,7 @@ def search():
         cursor = conn.cursor()
 
         # Execute SQL query to search for the product
-        query = "SELECT * FROM change_log WHERE LOWER(CONCAT(id, action, registration_number, product_name, timestamp)) LIKE %s"
+        query = "SELECT * FROM order_log WHERE LOWER(CONCAT(order_id, registration_number, product_name, amount_sold, price, total_price, timestamp)) LIKE %s"
         cursor.execute(query, ("%" + text + "%",))
 
         # Clear existing items in the Treeview
@@ -233,11 +233,11 @@ def search():
 
         # Insert matching rows into the Treeview
         for row in cursor.fetchall():
-        # Extract specific columns from the row
-            id, action, registration_number, product_name, timestamp = row[0], row[1], row[2], row[3], row[4], row[5], row[6]
+            # Extract specific columns from the row
+            order_id, registration_number, product_name, amount_sold, price, total_price, timestamp = row[0], row[1], row[2], row[3], row[4], row[5], row[6]
 
-        # Insert the extracted values into the Treeview
-            treeview.insert("", "end", values=(id, action, registration_number, product_name, timestamp))
+            # Insert the extracted values into the Treeview
+            treeview.insert("", "end", values=(order_id, registration_number, product_name, amount_sold, price, total_price, timestamp))
 
     except mysql.connector.Error as e:
         print("Error:", e)
@@ -247,6 +247,7 @@ def search():
         if conn.is_connected():
             cursor.close()
             conn.close()
+
 
 ################################################################
             
@@ -260,6 +261,8 @@ def on_leave(e):
 
 ################################################################
 
+################################################################
+        
 #### HEADER ####
 
 # Label

@@ -93,6 +93,14 @@ def load_data():
 
 ################################################################
 
+def refresh_treeview():
+    # Clear existing items from the treeview
+    for item in treeview.get_children():
+        treeview.delete(item)
+    load_data()
+
+################################################################
+
 def search():
     text = Search.get().lower()  # Convert search text to lowercase for case-insensitive search
     
@@ -420,9 +428,21 @@ def display_cart():
         except mysql.connector.Error as error:
             print("Failed to update quantity in the products table or record the order:", error)
 
-    # Display cart items
+    def remove_item_from_cart(item):
+        cart_items.remove(item)
+        cart_window.destroy()  # Close the current cart window
+        display_cart()  # Re-display the cart window with updated items
+
+    # Display cart items with remove button for each item
     for idx, item in enumerate(cart_items):
-        Label(cart_window, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}").pack(padx=10, pady=10)
+        item_frame = Frame(cart_window, bg=background)
+        item_frame.pack(padx=10, pady=5, fill="x")
+
+        item_label = Label(item_frame, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}", bg=background)
+        item_label.pack(side=LEFT)
+
+        remove_button = Button(item_frame, text="Remove", command=lambda i=item: remove_item_from_cart(i))
+        remove_button.pack(side=RIGHT)
 
     # Define a function to handle checkout for all items
     def checkout_all():
@@ -431,6 +451,7 @@ def display_cart():
         else:
             for item in cart_items:
                 checkout(item['registration_number'], item, item['amount_ordered'], item['price'])
+            refresh_treeview()
 
     # Add a single Checkout button for all items
     submit_button = Button(cart_window, text="Checkout", bg="#704214", fg="white", command=checkout_all)

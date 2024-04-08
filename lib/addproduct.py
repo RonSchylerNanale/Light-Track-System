@@ -27,9 +27,6 @@ root.resizable(True,True)
 # Define a StringVar to hold the image data
 image_data_var = StringVar()
 
-import mysql.connector
-from tkinter import messagebox
-
 def create_tables():
     try:
         conn = mysql.connector.connect(
@@ -89,8 +86,6 @@ def create_tables():
 # Call create_tables function before executing any other code
 create_tables()
 
-
-    
 def Exit():
     subprocess.Popen(['python', 'lib/product.py'])
     root.destroy()
@@ -129,7 +124,6 @@ def product_no():
     else:
         Registration.set("1")
      
-
 ################################################################
 
 def clear():

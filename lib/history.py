@@ -198,7 +198,7 @@ def search():
         # Insert matching rows into the Treeview
         for row in cursor.fetchall():
         # Extract specific columns from the row
-            id, action, registration_number, product_name, timestamp = row[0], row[1], row[2], row[3], row[4], row[5], row[6]
+            id, action, registration_number, product_name, timestamp = row[0], row[1], row[2], row[3], row[4]
 
         # Insert the extracted values into the Treeview
             treeview.insert("", "end", values=(id, action, registration_number, product_name, timestamp))
