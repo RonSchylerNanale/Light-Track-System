@@ -34,8 +34,9 @@ style.configure("Treeview", fieldbackground=framebg)  # Set field background col
 style.configure("Treeview.Treeitem", background=framebg, fieldbackground=framebg, foreground ="white")  # Set item background color
 
 # Connect to MySQL database
+
 mydb = mysql.connector.connect(
-   host="localhost",
+    host="localhost",
     user="root",
     password="",
     database="LTS",
@@ -343,22 +344,24 @@ def submit_order(product_data, registration_number, product_name):
     # Create a new Toplevel window for the order
     order_window = Toplevel()
     order_window.title("Make Order")
+    order_window.config(bg = background)
+    order_window.resizable(True,True)
     
     # Add labels and entry for product name, amount, and price
-    Label(order_window, text="Product Name:").grid(row=0, column=0, padx=5, pady=5)
-    Label(order_window, text=product_name).grid(row=0, column=1, padx=5, pady=5)
+    Label(order_window, text="Product Name:", bg=framebg, fg='white').grid(row=0, column=0, padx=5, pady=5)
+    Label(order_window, text=product_name, bg=framebg, fg='white').grid(row=0, column=1, padx=5, pady=5)
 
-    Label(order_window, text="Amount Ordered:").grid(row=1, column=0, padx=5, pady=5)
+    Label(order_window, text="Amount Ordered:", bg=framebg, fg='white').grid(row=1, column=0, padx=5, pady=5)
     amount_entry = Entry(order_window)
     amount_entry.grid(row=1, column=1, padx=5, pady=5)
 
-    Label(order_window, text="Price:").grid(row=2, column=0, padx=5, pady=5)
+    Label(order_window, text="Price:", bg=framebg, fg='white').grid(row=2, column=0, padx=5, pady=5)
     price_entry = Entry(order_window)
     price_entry.grid(row=2, column=1, padx=5, pady=5)
 
     # Add a button to submit the order
-    submit_button = Button(order_window, text="Add to Cart", command=submit_order)
-    submit_button.grid(row=3, columnspan=2, padx=0, pady=0)
+    submit_button = Button(order_window, text="Add to Cart", bg="#704214", fg='white', command=submit_order)
+    submit_button.grid(row=3, columnspan=2, padx=0, pady=5)
 
     # Make amount_entry accessible within the function
     submit_order.amount_entry = amount_entry  # Assigning to a function attribute
@@ -489,9 +492,46 @@ def select_product_for_order(data):
 
         # Button to select the product for making orders
         Button(obj, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name)).grid(row=rows, columnspan=2, pady=10)
+        # Button to restock the selected product
+        Button(obj, text="Restock", font='Arial 10 bold', bg='#1E8449', fg='white', command=lambda: restock_product(data)).grid(row=rows, column=1, pady=10, padx=(5, 0))
+
     else:
         # If data is None, display a message indicating no data found
         Label(root, text="No data found for selected product", font='Arial 10 bold', fg='red').pack()
+
+#################################################################
+
+def restock_product(data):
+    # Function to handle restocking of the selected product
+    quantity_to_add = simpledialog.askinteger("Restock Product", "Enter the quantity to restock:")
+    if quantity_to_add is not None and quantity_to_add > 0:
+        try:
+            # Establish MySQL connection
+            connection = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="",
+                database="LTS",
+                port=3306
+            )
+            cursor = connection.cursor()
+
+            # Update the quantity in the database
+            update_query = "UPDATE products SET quantity = quantity + %s WHERE name = %s"
+            cursor.execute(update_query, (quantity_to_add, data[1]))
+            connection.commit()
+
+            # Show confirmation message
+            messagebox.showinfo("Restock Successful", f"{quantity_to_add} units added to {data[1]}.")
+        
+            refresh_treeview()
+
+        except mysql.connector.Error as error:
+            print("Error updating quantity:", error)
+        finally:
+            if 'connection' in locals():
+                cursor.close()
+                connection.close()
 
 #################################################################
         
@@ -516,14 +556,59 @@ def on_item_select(event):
         print("No item selected")
 
 #################################################################
-
-def refresh_treeview():
-    # Clear existing nodes
-    for child in treeview.get_children():
-        treeview.delete(child)
     
-    # Load new data into the TreeView
-    load_data()
+# Function to check product quantities and show restock button if necessary
+def check_quantity():
+    # Connect to MySQL database
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Query to get products with quantity <= 20
+        cursor.execute("SELECT name FROM products WHERE quantity <= 20")
+        products_to_restock = cursor.fetchall()
+
+        conn.close()
+
+    except mysql.connector.Error as e:
+        messagebox.showerror("Error", f"Error connecting to database: {e}")
+
+#################################################################
+
+# Function to display products that need to be restocked
+def show_restock_list():
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT name FROM products WHERE quantity <= 20")
+        products_to_restock = cursor.fetchall()
+
+        if not products_to_restock:
+            messagebox.showinfo("Products to Restock", "No products need restocking.")
+        else:
+            restock_list = "\n".join([product[0] for product in products_to_restock])
+            messagebox.showinfo("Products to Restock", f"These products need to be restocked:\n{restock_list}")
+
+        conn.close()
+
+    except mysql.connector.Error as e:
+        messagebox.showerror("Error", f"Error connecting to database: {e}")
+
+# Check quantity when the window is loaded
+check_quantity()
 
 #################################################################
 
@@ -533,21 +618,43 @@ def refresh_treeview():
 label = Label(root, text='Product', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
-imageicon5 = PhotoImage(file='images/cart.png')
-view_cart_button = Button(label, image=imageicon5, command=display_cart, bg='#704214', fg='white', bd=0)
-view_cart_button.pack(side=RIGHT, padx=0, pady=0, anchor="e")
+# Load the original images
+imageicon1 = Image.open('images/back_button.png')
+imageicon3 = Image.open('images/search.png')
+imageicon4 = Image.open('images/add.png')
+imageicon5 = Image.open('images/cart.png')
+imageicon6 = Image.open('images/alert.png')
 
-imageicon4 = PhotoImage(file='images/add.png')
-search_button = Button(label, image=imageicon4, bg='#704214', fg='white', font='Helvetica 13 bold', command=add, bd=0)
-search_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
+# Resize the images to 30x30 pixels
+imageicon1 = imageicon1.resize((30, 30))
+imageicon3 = imageicon3.resize((30, 30))
+imageicon4 = imageicon4.resize((30, 30))
+imageicon5 = imageicon5.resize((30, 30))
+imageicon6 = imageicon6.resize((30, 30))
 
-imageicon1 = PhotoImage(file='images/back_button.png')
+# Convert the images to PhotoImage objects
+imageicon1 = ImageTk.PhotoImage(imageicon1)
+imageicon3 = ImageTk.PhotoImage(imageicon3)
+imageicon4 = ImageTk.PhotoImage(imageicon4)
+imageicon5 = ImageTk.PhotoImage(imageicon5)
+imageicon6 = ImageTk.PhotoImage(imageicon6)
+
+# Now use these resized images in your buttons
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=15, anchor="nw")
 
-imageicon3 = PhotoImage(file='images/search.png')
 search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
 search_button.pack(side=LEFT, padx=0, pady=10, anchor="e")
+
+add_button = Button(label, image=imageicon4, bg='#704214', fg='white', font='Helvetica 13 bold', command=add, bd=0)
+add_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
+
+view_cart_button = Button(label, image=imageicon5, command=display_cart, bg='#704214', fg='white', bd=0)
+view_cart_button.pack(side=RIGHT, padx=0, pady=0, anchor="e")
+
+restock_button = Button(label, image=imageicon6, bg='#704214', fg='white',command=show_restock_list, bd=0)
+restock_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
+
 
 # search box
 Search = StringVar()
