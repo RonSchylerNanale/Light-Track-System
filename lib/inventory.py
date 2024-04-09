@@ -338,9 +338,6 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
 
-import_button = Button(root, text="Import File", command=import_file)
-import_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
-
 exit_button = Button(footer, text='Exit', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
 exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
@@ -349,6 +346,9 @@ export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 export_page_button = Button(footer, text='Export Current Page', width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
 export_page_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
+
+import_button = Button(footer, text='Import', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=import_file, border=0)
+import_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 ###############################################################
 

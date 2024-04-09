@@ -260,6 +260,71 @@ def Save():
 
 ################################################################
 
+def Update():
+    R1 = Registration.get()
+    N1 = Name.get()
+    C1 = Category.get()
+    D2 = Description.get()
+    D1 = Date.get()
+    P1 = Price.get()
+    Q1 = Quantity.get()
+    A1 = Attributes.get()
+    S1 = Supplier.get()
+
+    # Get the image data if available
+    img_data = None
+    if 'img_variable' in globals() and img_variable:
+        img_data = convertToBinary(filename)  # pass filename
+
+    # Check if any required data is missing
+    if N1 == "" or C1 == "" or D2 == "" or D1 == "" or P1 == "" or Q1 == "" or A1 == "" or S1 == "":
+        messagebox.showerror("Error", "Some data is missing!")
+        return
+
+    try:
+        conn = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = conn.cursor()
+
+        # Check if the product exists
+        query = "SELECT * FROM products WHERE registration = %s"
+        cursor.execute(query, (R1,))
+        existing_product = cursor.fetchone()
+
+        # Update data in the database
+        if existing_product:
+            update_query = """
+                UPDATE products
+                SET name=%s, category=%s, description=%s, date=%s, price=%s, quantity=%s, attributes=%s, supplier=%s, image=%s
+                WHERE registration=%s
+            """
+            data = (N1, C1, D2, D1, P1, Q1, A1, S1, img_data, R1)
+            cursor.execute(update_query, data)
+            conn.commit()
+
+            log_changes("updated", R1, N1)
+
+            messagebox.showinfo('Info', 'Product updated successfully!')
+            clear()  # Clear the entry fields
+
+        else:
+            messagebox.showerror('Error', 'Product does not exist')
+
+    except mysql.connector.Error as e:
+        print("Error:", e)
+        messagebox.showerror("Error", "Failed to update product!")
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+
+################################################################
+
 def search():
     text = Search.get()
 
@@ -455,6 +520,9 @@ attribute_entry.grid(row=5, column=2, padx=10, pady=10)
 Supplier = StringVar()
 supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bold', bg='white')
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
+
+updateButton = Button(obj, text='Update', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', border=0, command= Update)
+updateButton.grid(row=8, column=0, padx=10, pady=10)
 
 ################################################
 
