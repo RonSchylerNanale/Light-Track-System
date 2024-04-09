@@ -508,6 +508,7 @@ def update_product(data):
     # Create a new window to display the update form
     update_window = Toplevel(root)
     update_window.title("Update Product")
+    update_window.configure(bg=background)
 
     # Labels for attributes that can be updated
     update_labels = ['Product Name:', 'Description:', 'Price:', 'Attributes:', 'Supplier:']
@@ -516,7 +517,7 @@ def update_product(data):
 
     # Display labels and entry fields for attributes that can be updated
     for i, label_text in enumerate(update_labels):
-        Label(update_window, text=label_text, font='Arial 10 bold').grid(row=i, column=0, padx=10, pady=5, sticky='e')
+        Label(update_window, text=label_text, font='Arial 10 bold', bg=background, fg="white").grid(row=i, column=0, padx=10, pady=5, sticky='e')
         entry = Entry(update_window, font='Arial 10')
         entry.insert(0, data[attribute_indices[i]])  # Fill entry with current value
         entry.grid(row=i, column=1, padx=10, pady=5, sticky='w')
@@ -553,7 +554,6 @@ def update_product(data):
         cursor.close()
         db_connection.close()
 
-        print("Product updated successfully!")
         update_window.destroy()  # Close the update window
 
         log_changes("Updated", data[0], data[1])
