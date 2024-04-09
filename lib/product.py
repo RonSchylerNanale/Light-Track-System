@@ -574,6 +574,51 @@ def update_product(data):
 
 #################################################################
 
+def delete_product_from_database(registration_number):
+    try:
+        # Establish connection to the MySQL database
+        db_connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = db_connection.cursor()
+
+        # Construct the SQL delete statement
+        delete_query = "DELETE FROM products WHERE registration = %s"
+
+        # Execute the delete statement
+        cursor.execute(delete_query, (registration_number,))
+
+        # Commit the transaction
+        db_connection.commit()
+
+        # Close the cursor and database connection
+        cursor.close()
+        db_connection.close()
+
+        return True
+    except mysql.connector.Error as error:
+        print("Error deleting product:", error)
+        return False
+
+def delete_product(data):
+    registration_number = data[0]
+    product_name = data[1]
+
+    confirmation = messagebox.askyesno("Confirmation", f"Are you sure you want to delete '{product_name}'?")
+
+    if confirmation:
+        if delete_product_from_database(registration_number):
+            messagebox.showinfo("Success", "Product deleted successfully!")
+            refresh_treeview()
+        else:
+            messagebox.showerror("Error", "Failed to delete product!")
+
+#################################################################
+
 def select_product_for_order(data):
     # Assuming data contains product information
     registration_number = data[0]
@@ -582,6 +627,29 @@ def select_product_for_order(data):
     # Check if the Frame widget exists before destroying it
     if 'obj' in globals():
         clear_product_details()
+
+    def fetch_product_from_database(registration_number):
+        # Establish connection to the MySQL database
+        db_connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = db_connection.cursor()
+
+        # Fetch product information from the database
+        cursor.execute("SELECT * FROM products WHERE registration = %s", (registration_number,))
+        product_data = cursor.fetchone()
+
+        # Close the cursor and database connection
+        cursor.close()
+        db_connection.close()
+
+        return product_data
+
+    data = fetch_product_from_database(registration_number)
 
     if data:
         # Create a new Frame widget to display product details
@@ -602,22 +670,24 @@ def select_product_for_order(data):
                 Label(obj, text=value, font='Arial 10', bg=framebg, fg='white').grid(row=rows, column=1, sticky="w", padx=0, pady=3)
             rows += 1
 
-
         # Create a frame for buttons
         button_frame = Frame(obj, bg=framebg)
         button_frame.grid(row=rows, column=0, columnspan=3, pady=10)
 
+          # Button to select the product for making orders
+        Button(button_frame, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name), bd=0).pack(side=LEFT, padx=(0, 5))
+
         # Button to archive the selected product
         Button(button_frame, text="Archive", font='Arial 10 bold', bg='#FF5733', fg='white', command=lambda: archive_product(data), bd=0).pack(side=LEFT, padx=(0, 5))
-
-        # Button to select the product for making orders
-        Button(button_frame, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name), bd=0).pack(side=LEFT)
 
         # Button to update the selected product
         Button(button_frame, text="Update", font='Arial 10 bold', bg='#4287f5', fg='white', command=lambda: update_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
 
         # Button to restock the selected product
         Button(button_frame, text="Restock", font='Arial 10 bold', bg='#1E8449', fg='white', command=lambda: restock_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
+
+        # Button to delete the selected product
+        Button(button_frame, text="Delete", font='Arial 10 bold', bg='#FF5733', fg='white', command=lambda: delete_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
 
     else:
         # If data is None, display a message indicating no data found
