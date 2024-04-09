@@ -442,71 +442,6 @@ def delete():
         confirm_delete()
 
 ################################################################
-
-def archive():
-    registration = Registration.get()
-
-    try:
-        conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="LTS",
-            port=3306
-        )
-        cursor = conn.cursor()
-
-        # Check if the product exists
-        query = "SELECT * FROM products WHERE registration = %s"
-        cursor.execute(query, (registration,))
-        existing_product = cursor.fetchone()
-
-        if existing_product:
-            # Extract product details
-            registration = existing_product[0]
-            name = existing_product[1]
-            category = existing_product[2]
-            description = existing_product[3]
-            date = existing_product[4]
-            price = existing_product[5]
-            quantity = existing_product[6]
-            attributes = existing_product[7]
-            supplier = existing_product[8]
-            img_data = existing_product[9]
-
-            # Insert the record into the archive table
-            archive_query = """
-                INSERT INTO archive 
-                (registration, name, category, description, date, price, quantity, attributes, supplier, image) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-            cursor.execute(archive_query, (registration, name, category, description, date, price, quantity, attributes, supplier, img_data))
-            conn.commit()
-    
-            # Delete the record from the products table
-            delete_query = "DELETE FROM products WHERE registration = %s"
-            cursor.execute(delete_query, (registration,))
-            conn.commit()
-
-            log_changes("archived", registration, name)
-
-            messagebox.showinfo('Info', 'Product archived successfully and removed from products table!')
-            clear()  # Clear the entry fields
-
-        else:
-            # Product does not exist
-            messagebox.showerror('Error', 'Product does not exist')
-
-    except mysql.connector.Error as e:
-        print("Error:", e)
-        messagebox.showerror('Error', 'Failed to archive product.')
-
-    finally:
-        if conn.is_connected():
-            cursor.close()
-            conn.close()
-
-################################################################
             
 def log_changes(action, registration_number, product_name):
     
@@ -633,9 +568,6 @@ attribute_entry.grid(row=5, column=2, padx=10, pady=10)
 Supplier = StringVar()
 supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bold', bg='white')
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
-
-archive_button=Button(obj, text="Archive", bg='#704214', border=0, command=archive, font='Helvetica 10 bold', fg='White', width=15, height=2)
-archive_button.grid(row=8, column=0, padx=20, pady=10)
 
 delete_button=Button(obj, text="Delete", bg='#704214', border=0, command=delete, font='Helvetica 10 bold', fg='White', width=15, height=2)
 delete_button.grid(row=7, column=0, padx=20, pady=10)

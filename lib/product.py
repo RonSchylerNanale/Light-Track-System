@@ -444,7 +444,7 @@ def display_cart():
         item_label = Label(item_frame, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}", bg=background)
         item_label.pack(side=LEFT)
 
-        remove_button = Button(item_frame, text="Remove", command=lambda i=item: remove_item_from_cart(i))
+        remove_button = Button(item_frame, text="Remove", font='Helvetica 10 bold', bg="RED", fg="White",command=lambda i=item: remove_item_from_cart(i))
         remove_button.pack(side=RIGHT)
 
     # Define a function to handle checkout for all items
@@ -457,8 +457,47 @@ def display_cart():
             refresh_treeview()
 
     # Add a single Checkout button for all items
-    submit_button = Button(cart_window, text="Checkout", bg="#704214", fg="white", command=checkout_all)
+    submit_button = Button(cart_window, text="Checkout", font='Helvetica 10 bold', bg="green", fg="white", command=checkout_all, bd=0)
     submit_button.pack(side=BOTTOM, padx=10, pady=10)
+
+#################################################################
+
+def archive_product(data):
+    try:
+        # Establish MySQL connection
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = connection.cursor()
+
+        # Move the product details to the archive table
+        archive_query = "INSERT INTO archive SELECT * FROM products WHERE name = %s"
+        cursor.execute(archive_query, (data[1],))
+        connection.commit()
+
+        # Delete the product from the products table
+        delete_query = "DELETE FROM products WHERE name = %s"
+        cursor.execute(delete_query, (data[1],))
+        connection.commit()
+
+        # Show confirmation message
+        messagebox.showinfo("Archive Successful", f"{data[1]} has been archived.")
+
+        log_changes("Archived", data[0], data[1])
+
+        refresh_treeview()
+
+    except mysql.connector.Error as error:
+        print("Error archiving product:", error)
+    finally:
+        if 'connection' in locals():
+            cursor.close()
+            connection.close()
+
 
 #################################################################
 
@@ -490,10 +529,19 @@ def select_product_for_order(data):
                 Label(obj, text=value, font='Arial 10', bg=framebg, fg='white').grid(row=rows, column=1, sticky="w", padx=0, pady=3)
             rows += 1
 
+
+        # Create a frame for buttons
+        button_frame = Frame(obj, bg=framebg)
+        button_frame.grid(row=rows, column=0, columnspan=3, pady=10)
+
+        # Button to archive the selected product
+        Button(button_frame, text="Archive", font='Arial 10 bold', bg='#FF5733', fg='white', command=lambda: archive_product(data),bd=0).pack(side=LEFT, padx=(0, 5))
+
         # Button to select the product for making orders
-        Button(obj, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name)).grid(row=rows, columnspan=2, pady=10)
+        Button(button_frame, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name),bd=0).pack(side=LEFT)
+
         # Button to restock the selected product
-        Button(obj, text="Restock", font='Arial 10 bold', bg='#1E8449', fg='white', command=lambda: restock_product(data)).grid(row=rows, column=1, pady=10, padx=(5, 0))
+        Button(button_frame, text="Restock", font='Arial 10 bold', bg='#1E8449', fg='white', command=lambda: restock_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
 
     else:
         # If data is None, display a message indicating no data found

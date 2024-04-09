@@ -219,6 +219,14 @@ def search():
 
 ################################################################
 
+def refresh_treeview():
+    # Clear existing items from the treeview
+    for item in treeview.get_children():
+        treeview.delete(item)
+    load_data()
+
+################################################################
+
 def unarchive():
     selected_item = treeview.selection()
     if not selected_item:
@@ -257,6 +265,8 @@ def unarchive():
 
     # Log the unarchive action
     log_changes("unarchived", registration, archived_product[1])
+
+    refresh_treeview()
 
     conn.close()
     messagebox.showinfo("Success", "Product has been unarchived successfully.")
