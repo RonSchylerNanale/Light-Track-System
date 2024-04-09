@@ -113,32 +113,32 @@ def load_data():
 ################################################################
         
 def export():
-    # Connect to MySQL database
     try:
         connection = mysql.connector.connect(
             host="localhost",
             user="root",
             password="",
             database="LTS",
-            port = 3306
+            port=3306
         )
 
-        # Define SQL query to fetch data
-        query = "SELECT * FROM products"
+        # Define SQL query to fetch data from the 'products' table with the specified columns
+        query = "SELECT registration, name, category, description, date, price, quantity, attributes, supplier, image FROM products"
 
         # Execute the query and fetch data into a pandas DataFrame
         df = pd.read_sql(query, connection)
 
-        # Define the Excel file name
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        excel_file = "Products-" + current_time + ".xlsx"
-        # Write DataFrame to Excel file
-        df.to_excel(excel_file, index=False)
+        # Prompt the user to select a file name and location
+        default_file_name = "Products-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
+        filename = filedialog.asksaveasfilename(defaultextension=".xlsx", initialfile=default_file_name, filetypes=[("Excel files", "*.xlsx")])
 
-        print("Data exported to Excel successfully.")
+        if filename:
+            # Write DataFrame to Excel file
+            df.to_excel(filename, index=False)
+            messagebox.showinfo("Export Successful", "Data exported to " + filename)
 
     except mysql.connector.Error as e:
-        print("Error connecting to MySQL:", e)
+        messagebox.showerror("Error", "Error connecting to MySQL: " + str(e))
 
     finally:
         if connection.is_connected():
@@ -220,6 +220,48 @@ def on_leave(e):
         search_entry.insert(0, 'Search')
 
 ################################################################
+        
+def refresh_treeview():
+    # Clear existing items from the treeview
+    for item in treeview.get_children():
+        treeview.delete(item)
+    load_data()
+
+################################################################
+
+def import_file():
+    file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx")])
+    if file_path:
+        try:
+            if file_path.endswith('.csv'):
+                df = pd.read_csv(file_path)
+            elif file_path.endswith('.xlsx'):
+                df = pd.read_excel(file_path)
+                
+            # Assuming you have a MySQL connection already established
+            connection = mysql.connector.connect(host="localhost",
+                                                  user="root",
+                                                  password="",
+                                                  database="LTS",
+                                                  port=3306)
+            cursor = connection.cursor()
+
+            # Import data to MySQL table named 'products'
+            for index, row in df.iterrows():
+                sql = "INSERT INTO products (registration, name, category, description, date, price, quantity, attributes, supplier, image) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" 
+                # Replace column names with actual column names in your MySQL table
+                cursor.execute(sql, tuple(row))
+                
+            connection.commit()
+            connection.close()
+
+            refresh_treeview(treeview)
+
+            messagebox.showinfo("Success", "Data imported successfully")
+        except Exception as e:
+            messagebox.showerror("Error", "An error occurred: " + str(e))
+
+################################################################
 
 #### HEADER ####
 
@@ -295,6 +337,9 @@ footer = Label(root,  width=10, font='Helvetica 10 bold', height=3, bg=framebg, 
 footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
+
+import_button = Button(root, text="Import File", command=import_file)
+import_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 exit_button = Button(footer, text='Exit', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
 exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")

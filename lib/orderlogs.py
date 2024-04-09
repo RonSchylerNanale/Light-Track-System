@@ -172,10 +172,10 @@ def export():
         if filename:
             # Write DataFrame to Excel file
             df.to_excel(filename, index=False)
-            print("Data exported to", filename)
+            messagebox.showinfo("Export Successful", "Data exported to " + filename)
 
     except mysql.connector.Error as e:
-        print("Error connecting to MySQL:", e)
+        messagebox.showerror("Error", "Error connecting to MySQL: " + str(e))
 
     finally:
         if connection.is_connected():

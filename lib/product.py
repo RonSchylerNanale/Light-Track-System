@@ -604,6 +604,8 @@ def delete_product_from_database(registration_number):
         print("Error deleting product:", error)
         return False
 
+#################################################################
+
 def delete_product(data):
     registration_number = data[0]
     product_name = data[1]
@@ -672,7 +674,7 @@ def select_product_for_order(data):
 
         # Create a frame for buttons
         button_frame = Frame(obj, bg=framebg)
-        button_frame.grid(row=rows, column=0, columnspan=3, pady=10)
+        button_frame.grid(row=rows, column=0, columnspan=3, padx=10, pady=10)
 
           # Button to select the product for making orders
         Button(button_frame, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name), bd=0).pack(side=LEFT, padx=(0, 5))
