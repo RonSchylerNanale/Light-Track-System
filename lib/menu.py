@@ -50,8 +50,8 @@ frame = Frame(root, bg="#c19a6b", bd=0)
 frame.pack(side=TOP, fill="both", expand=True)
 
 # Create a frame to hold the buttons
-button_frame = Frame(frame, bg="#c19a6b")
-button_frame.pack(expand=True)
+button_frame = Frame(frame, bg="#c19a6b", bd=10)
+button_frame.pack(side=LEFT)
 
 # Load the original images
 imageicon5 = Image.open('images/product.png')
@@ -59,9 +59,9 @@ imageicon6 = Image.open('images/inventory.png')
 imageicon7 = Image.open('images/history.png')
 
 # Resize the images to 20x20 pixels
-imageicon5 = imageicon5.resize((250, 250))
-imageicon6 = imageicon6.resize((250, 250))
-imageicon7 = imageicon7.resize((250, 250))
+imageicon5 = imageicon5.resize((180, 180))
+imageicon6 = imageicon6.resize((180, 180))
+imageicon7 = imageicon7.resize((180, 180))
 
 # Convert the images to PhotoImage objects
 imageicon5 = ImageTk.PhotoImage(imageicon5)
@@ -70,13 +70,13 @@ imageicon7 = ImageTk.PhotoImage(imageicon7)
 
 # Now use these resized images in your buttons
 products = Button(button_frame, image=imageicon5, bg='#c19a6b', border=0, command=open_product)
-products.grid(row=1, column=0)
+products.grid(row=1, column=1)
 
 database = Button(button_frame, image=imageicon6, bg='#c19a6b', border=0, command=open_inventory)
-database.grid(row=1, column=1)
+database.grid(row=2, column=1)
 
 database = Button(button_frame, image=imageicon7, bg='#c19a6b', border=0, command=open_history)
-database.grid(row=1, column=2)
+database.grid(row=3, column=1)
 
 
 

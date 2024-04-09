@@ -118,20 +118,24 @@ def search():
         )
         cursor = conn.cursor()
 
-        # Execute SQL query to search for the product
-        query = "SELECT * FROM products WHERE LOWER(CONCAT(registration, name, price, quantity)) LIKE %s"
-        cursor.execute(query, ("%" + text + "%",))
+        if text:
+            # Execute SQL query to search for the product
+            query = "SELECT * FROM products WHERE LOWER(CONCAT(registration, name, price, quantity)) LIKE %s"
+            cursor.execute(query, ("%" + text + "%",))
+        else:
+            # If search text is empty, fetch all products
+            cursor.execute("SELECT * FROM products")
 
         # Clear existing items in the Treeview
         treeview.delete(*treeview.get_children())
 
         # Insert matching rows into the Treeview
         for row in cursor.fetchall():
-        # Extract specific columns from the row
-            registration, name, price, quantity = row[0], row[1], row[5],row[6]
+            # Extract specific columns from the row
+            registration, name, price, quantity = row[0], row[1], row[5], row[6]
 
-        # Insert the extracted values into the Treeview
-            treeview.insert("", "end", values=(registration, name, price,quantity))
+            # Insert the extracted values into the Treeview
+            treeview.insert("", "end", values=(registration, name, price, quantity))
 
     except mysql.connector.Error as e:
         print("Error:", e)
@@ -498,6 +502,75 @@ def archive_product(data):
             cursor.close()
             connection.close()
 
+#################################################################
+
+def update_product(data):
+    # Create a new window to display the update form
+    update_window = Toplevel(root)
+    update_window.title("Update Product")
+
+    # Labels for attributes that can be updated
+    update_labels = ['Product Name:', 'Description:', 'Price:', 'Attributes:', 'Supplier:']
+    # Corresponding indices for these attributes in the data
+    attribute_indices = [1, 3, 5, 7, 8]
+
+    # Display labels and entry fields for attributes that can be updated
+    for i, label_text in enumerate(update_labels):
+        Label(update_window, text=label_text, font='Arial 10 bold').grid(row=i, column=0, padx=10, pady=5, sticky='e')
+        entry = Entry(update_window, font='Arial 10')
+        entry.insert(0, data[attribute_indices[i]])  # Fill entry with current value
+        entry.grid(row=i, column=1, padx=10, pady=5, sticky='w')
+
+    # Function to handle the update process
+    def confirm_update():
+        updated_values = [entry.get() for entry in entry_fields]
+        registration_number = data[0]  # Assuming registration number is the primary key
+        attributes_to_update = ['name', 'description', 'price', 'attributes', 'supplier']
+        values_dict = dict(zip(attributes_to_update, updated_values))
+
+        # Establish connection to the MySQL database
+        db_connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        cursor = db_connection.cursor()
+
+        # Construct the SQL update statement
+        update_query = "UPDATE products SET "
+        update_query += ", ".join([f"{attr} = %s" for attr in attributes_to_update])
+        update_query += " WHERE registration = %s"
+
+        # Execute the update statement
+        cursor.execute(update_query, (*updated_values, registration_number))
+        
+        # Commit the transaction
+        db_connection.commit()
+
+        # Close the cursor and database connection
+        cursor.close()
+        db_connection.close()
+
+        print("Product updated successfully!")
+        update_window.destroy()  # Close the update window
+
+        log_changes("Updated", data[0], data[1])
+
+        refresh_treeview()
+        
+        messagebox.showinfo("Update Successful", "Product updated successfully!")
+
+
+    # Button to confirm the update
+    confirm_button = Button(update_window, text="Update", font='Arial 10 bold', bg='#4287f5', fg='white', command=confirm_update)
+    confirm_button.grid(row=len(update_labels), columnspan=2, pady=10)
+
+    entry_fields = [entry for entry in update_window.children.values() if isinstance(entry, Entry)]
+
+    # Main loop for the update window
+    update_window.mainloop()
 
 #################################################################
 
@@ -535,10 +608,13 @@ def select_product_for_order(data):
         button_frame.grid(row=rows, column=0, columnspan=3, pady=10)
 
         # Button to archive the selected product
-        Button(button_frame, text="Archive", font='Arial 10 bold', bg='#FF5733', fg='white', command=lambda: archive_product(data),bd=0).pack(side=LEFT, padx=(0, 5))
+        Button(button_frame, text="Archive", font='Arial 10 bold', bg='#FF5733', fg='white', command=lambda: archive_product(data), bd=0).pack(side=LEFT, padx=(0, 5))
 
         # Button to select the product for making orders
-        Button(button_frame, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name),bd=0).pack(side=LEFT)
+        Button(button_frame, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name), bd=0).pack(side=LEFT)
+
+        # Button to update the selected product
+        Button(button_frame, text="Update", font='Arial 10 bold', bg='#4287f5', fg='white', command=lambda: update_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
 
         # Button to restock the selected product
         Button(button_frame, text="Restock", font='Arial 10 bold', bg='#1E8449', fg='white', command=lambda: restock_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
@@ -657,6 +733,10 @@ def show_restock_list():
 
 # Check quantity when the window is loaded
 check_quantity()
+
+#################################################################
+
+
 
 #################################################################
 
