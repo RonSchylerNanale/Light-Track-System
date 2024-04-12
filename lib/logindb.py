@@ -6,11 +6,10 @@ from subprocess import call
 import subprocess
 
 window = Tk()
-window.title("Light Track System")
+window.title("Sign Up")
 window.geometry('800x600+0+0')
 window.configure(bg = "#c19a6b")
 window.resizable(True,True)
-x, y = 500, 500
 
 background = "#c19a6b"
 framebg = "#c19a6b"

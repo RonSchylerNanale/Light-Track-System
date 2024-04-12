@@ -13,11 +13,14 @@ background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
 
+
 root = Tk()
 root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
+root.wm_state('zoomed')
+
 
 style = ttk.Style()
 style.theme_use("clam")  # Use the default theme
@@ -194,7 +197,7 @@ def export_to_excel(treeview):
         data_list.append(tuple(item_data))
 
     # Convert data to a DataFrame
-    df = pd.DataFrame(data_list, columns=["id", "action", "registration_number", "product_name", "timestamp"])
+    df = pd.DataFrame(data_list, columns=["order_id", "registration_number", "product_name", "amount_sold", "price", "total_price", "timestamp"])
 
     # Define the default file name with the current timestamp
     default_file_name = "Current-Page-Order-Log-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
@@ -248,7 +251,6 @@ def search():
             cursor.close()
             conn.close()
 
-
 ################################################################
             
 def on_enter(e):
@@ -261,12 +263,18 @@ def on_leave(e):
 
 ################################################################
 
+def refresh_treeview():
+    # Clear existing items from the treeview
+    for item in treeview.get_children():
+        treeview.delete(item)
+    load_data()
+    
 ################################################################
-        
+
 #### HEADER ####
 
 # Label
-label = Label(root, text='Order History', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
+label = Label(root, text='Order Logs', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
 # Search button
@@ -287,6 +295,9 @@ search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 imageicon1 = PhotoImage(file='images/back_button.png')
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
+
+refresh_button = Button(label, text='Refresh Table', width=17, height=2, font='Helvetica 10 bold', bg=background, fg='white', command=refresh_treeview, border=0)
+refresh_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 ################################################################
 

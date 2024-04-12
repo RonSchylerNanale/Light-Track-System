@@ -24,6 +24,8 @@ root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
+root.wm_state('zoomed')
+
 
 style = ttk.Style()
 style.theme_use("clam")  # Use the default theme
@@ -777,7 +779,6 @@ def check_quantity():
 
 #################################################################
 
-# Function to display products that need to be restocked
 def show_restock_list():
     try:
         conn = mysql.connector.connect(
@@ -792,23 +793,34 @@ def show_restock_list():
         cursor.execute("SELECT name FROM products WHERE quantity <= 20")
         products_to_restock = cursor.fetchall()
 
+        # Create Tkinter window
+        window = Toplevel(root)
+        window.title("Products to Restock")
+        window.geometry("300x500+600+40")
+        window.configure(bg=background)
+
         if not products_to_restock:
-            messagebox.showinfo("Products to Restock", "No products need restocking.")
+            restock_label = Label(window, text="No products need restocking.", bg=background, fg='white')
+            restock_label.pack(padx=5, pady=5)
         else:
             restock_list = "\n".join([product[0] for product in products_to_restock])
-            messagebox.showinfo("Products to Restock", f"These products need to be restocked:\n{restock_list}")
+            restock_label = Label(window, text=f"These products need to be restocked:\n{restock_list}")
+            restock_label.pack(padx=5, pady=5)
 
         conn.close()
 
+        # Run Tkinter event loop
+        window.mainloop()
+
     except mysql.connector.Error as e:
-        messagebox.showerror("Error", f"Error connecting to database: {e}")
+        error_window = Tk()
+        error_window.title("Error")
+        error_label = Label(error_window, text=f"Error connecting to database: {e}")
+        error_label.pack()
+        error_window.mainloop()
 
 # Check quantity when the window is loaded
 check_quantity()
-
-#################################################################
-
-
 
 #################################################################
 
@@ -870,8 +882,6 @@ orderhistory_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 archive_button = Button(label, text='Archive', width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
 archive_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
-
-
 
 #################################################################
 

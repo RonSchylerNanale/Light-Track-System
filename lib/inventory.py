@@ -18,6 +18,8 @@ root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
+root.wm_state('zoomed')
+
 
 style = ttk.Style()
 style.theme_use("clam")  # Use the default theme
