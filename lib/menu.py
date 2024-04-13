@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import subprocess
+from tkinter import PhotoImage
 
 background = "#c19a6b"
 framebg = "#c19a6b"
