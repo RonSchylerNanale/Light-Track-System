@@ -882,7 +882,7 @@ search_entry.bind("<FocusOut>", on_leave)
 search_entry.pack(side="left", padx=10, pady=10)
 
 # Button frame
-button_frame = customtkinter.CTkFrame(label, fg_color=("transparent"))
+button_frame = customtkinter.CTkFrame(label, fg_color=("transparent"), corner_radius=0)
 button_frame.pack(side="right", padx=10, pady=10)
 
 # Order History Button
@@ -893,12 +893,11 @@ orderhistory_button.pack(side="right", padx=5)
 archive_button = customtkinter.CTkButton(button_frame, text='Archive', command=archive, fg_color=("white", framebg))
 archive_button.pack(side="right", padx=5)
 
-
 #################################################################
 
 ###### TABLE #########
 
-frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))#, bg="#c19a6b", bd=0)
+frame = customtkinter.CTkFrame(root, fg_color=("white", framebg), corner_radius=0)#, bg="#c19a6b", bd=0)
 frame.pack(side=LEFT, fill="both", anchor="n")
 
 # Frame for Treeview

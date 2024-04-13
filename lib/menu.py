@@ -53,7 +53,7 @@ label.pack(side=TOP, fill="x", anchor = "nw")
 logout = Button(label, text='Logout', width=7, height=1, font='arial 10 bold', bg='#704214', fg='white', border=0, command=logout)
 logout.pack(side=TOP, anchor='e', pady=10)
 
-frame = customtkinter.CTkFrame(root, fg_color=('white', framebg))
+frame = customtkinter.CTkFrame(root, fg_color=('white', framebg), corner_radius=0)
 frame.pack(side=TOP, fill="both", expand=True)
 
 # Create a frame to hold the buttons

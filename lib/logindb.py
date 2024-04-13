@@ -5,7 +5,7 @@ import mysql.connector
 from subprocess import call
 import subprocess
 from PIL import Image, ImageTk
-
+import customtkinter
 
 window = Tk()
 window.title("Sign Up")
@@ -16,6 +16,7 @@ window.resizable(True,True)
 background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
+buttonsbg = "#704214"
 
 #########################################################################
 
@@ -105,7 +106,7 @@ def on_leave(e):
 
 #########################################################################
     
-image_frame = customtkinter.CTkFrame(window, bg="#c19a6b")
+image_frame = customtkinter.CTkFrame(window, fg_color=("white", framebg))
 image_frame.pack(side=LEFT, padx=0, pady=0)
 
 img1 = Image.open('images/Tanglaw231.png')
@@ -114,7 +115,7 @@ img1 = img1.resize((490, 600))
 
 img1 = ImageTk.PhotoImage(img1)
 
-frame = customtkinter.CTkFrame(window, bg="#c19a6b")
+frame = customtkinter.CTkFrame(window, fg_color=("white", framebg))
 frame.pack(side= LEFT, padx = 10)
 
 # Create an image label
@@ -127,7 +128,7 @@ image_label = Label(frame, image=img, bg="#c19a6b")
 image_label.grid(row=0, column=0, pady=5)
 
 # Create a frame for the heading
-heading_frame = customtkinter.CTkFrame(frame, bg="#c19a6b")
+heading_frame = customtkinter.CTkFrame(frame, fg_color=('white', buttonsbg))
 heading_frame.grid(row=2, column=0, pady=5)
 
 # Create a label for the heading
