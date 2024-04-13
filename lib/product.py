@@ -15,10 +15,13 @@ from mysql.connector import Error
 import io
 import customtkinter
 
+customtkinter.set_appearance_mode("Custom Accent")
+customtkinter.set_default_color_theme("blue")
 
 background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
+buttonsbg = "#704214"
 
 root = customtkinter.CTk()
 root.title("Light Track System")
@@ -445,7 +448,7 @@ def display_cart():
 
     # Display cart items with remove button for each item
     for idx, item in enumerate(cart_items):
-        item_frame = Frame(cart_window, bg=background)
+        item_frame = customtkinter.CTkFrame(cart_window, bg=background)
         item_frame.pack(padx=10, pady=5, fill="x")
 
         item_label = Label(item_frame, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}", bg=background)
@@ -659,7 +662,7 @@ def select_product_for_order(data):
     if data:
         # Create a new Frame widget to display product details
         global obj
-        obj = Frame(root, bd=0, width=350, bg=framebg, relief=GROOVE)
+        obj = customtkinter.CTkFrame(root, fg_color=("white", framebg))#, bd=0, width=350, bg=framebg, relief=GROOVE)
         obj.pack(side=TOP, anchor="n", padx=10, pady=10, fill='x')
 
         # Labels for database fields
@@ -676,7 +679,7 @@ def select_product_for_order(data):
             rows += 1
 
         # Create a frame for buttons
-        button_frame = Frame(obj, bg=framebg)
+        button_frame = customtkinter.CTkFrame(obj, fg_color=("white", framebg))
         button_frame.grid(row=rows, column=0, columnspan=3, padx=10, pady=10)
 
           # Button to select the product for making orders
@@ -825,6 +828,7 @@ check_quantity()
 
 #################################################################
 
+
 #### HEADER ####
 
 # top frames
@@ -870,37 +874,40 @@ restock_button.pack(side=RIGHT, padx=10, pady=5, anchor="e")
 
 # search box
 Search = StringVar()
-search_entry = Entry(label, textvariable=Search, font='Helvetica 15', bg=framebg, fg='white', bd=0, highlightthickness=1, highlightbackground=framebg)
+search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
 search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
 search_entry.bind("<FocusOut>", on_leave)
-search_entry.pack(side=LEFT, padx=0, pady=10, anchor="e")
+search_entry.pack(side="left", padx=10, pady=10)
 
-orderhistory_button = Button(label, text='Order History', width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=orderlogs, border=0)
-orderhistory_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
+# Button frame
+button_frame = customtkinter.CTkFrame(label, fg_color=("transparent"))
+button_frame.pack(side="right", padx=10, pady=10)
 
-archive_button = customtkinter.CTkButton(label, text='Archive')#, width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
-archive_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
+# Order History Button
+orderhistory_button = customtkinter.CTkButton(button_frame, text='Order History', command=orderlogs, fg_color=("white", framebg))
+orderhistory_button.pack(side="right", padx=5)
+
+# Archive Button
+archive_button = customtkinter.CTkButton(button_frame, text='Archive', command=archive, fg_color=("white", framebg))
+archive_button.pack(side="right", padx=5)
+
 
 #################################################################
 
 ###### TABLE #########
 
-frame = Frame(root, bg="#c19a6b", bd=0)
+frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))#, bg="#c19a6b", bd=0)
 frame.pack(side=LEFT, fill="both", anchor="n")
 
 # Frame for Treeview
-f = Frame(frame, bd=0, bg='#704214', relief=GROOVE)
+f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))#, bd=0, bg='#704214', relief=GROOVE)
 f.pack(side=LEFT, fill="y", anchor="w", padx=(10,0), pady=10)
 
 # Create vertical scrollbar
-fscroll = ttk.Scrollbar(f, orient="vertical", style="Vertical.TScrollbar")
+fscroll = customtkinter.CTkScrollbar(f)#, orient="vertical", style="Vertical.TScrollbar")
 fscroll.pack(side="right", fill="y")
-
-# Create horizontal scrollbar
-hscroll = ttk.Scrollbar(f, orient="horizontal", style="Horizontal.TScrollbar")
-hscroll.pack(side="bottom", fill="x")
 
 cols = ("registration", "name", "price", "quantity")
 
@@ -914,8 +921,7 @@ for col, width in column_widths.items():
     treeview.column(col, width=width)
 
 # Set scrollbar commands
-fscroll.config(command=treeview.yview)
-hscroll.config(command=treeview.xview)
+fscroll.configure(command=treeview.yview)
 
 # Set headings using SortableTreeview's set_heading method
 heading_map = {"registration": "#1", "name": "#2", "price": "#3", "quantity": "#4"}
@@ -930,7 +936,7 @@ treeview.bind("<<TreeviewSelect>>", on_item_select)
 
 ################################################################
 
-obj = LabelFrame(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
+obj = Label(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
 obj.pack(side=TOP, anchor="n", padx = 10, pady = 10, fill='x')
 
 # Labels for database fields

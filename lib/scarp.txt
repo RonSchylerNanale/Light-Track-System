@@ -94,7 +94,7 @@ def signup_command():
     img = PhotoImage(file = 'images/login_logo.png')
     Label(signup_window, image=img, bg="#c19a6b", font = ("Arial",)).place(x=118,y=50)
 
-    frame=Frame(signup_window, width=350, height=350, bg="#c19a6b")
+    frame=customtkinter.CTkFrame(signup_window, width=350, height=350, bg="#c19a6b")
     frame.place(x=5, y=250)
 
     heading=Label(signup_window, text = 'Sign Up', fg = 'white', bg='#c19a6b', font=("Microsoft YaHei UI Light", 23, 'bold'))
@@ -115,8 +115,8 @@ def signup_command():
     user.bind("<FocusIn>", on_enter)
     user.bind("<FocusOut>", on_leave)
 
-    Frame(frame, width=295, height=2, bg='white').place(x=25,y=107)
-    Frame(frame, width=150, height=2, bg='white').place(x=100,y=200)
+    customtkinter.CTkFrame(frame, width=295, height=2, bg='white').place(x=25,y=107)
+    customtkinter.CTkFrame(frame, width=150, height=2, bg='white').place(x=100,y=200)
 
     ################################################################
 
@@ -134,7 +134,7 @@ def signup_command():
     code.bind("<FocusIn>", on_enter)
     code.bind("<FocusOut>", on_leave)
             
-    Frame(frame, width=150, height=2, bg='white').place(x=100,y=240)
+    customtkinter.CTkFrame(frame, width=150, height=2, bg='white').place(x=100,y=240)
 
     ################################################################
 
@@ -152,7 +152,7 @@ def signup_command():
     confirm_code.bind("<FocusIn>", on_enter)
     confirm_code.bind("<FocusOut>", on_leave)
             
-    Frame(frame, width=150, height=2, bg='white').place(x=100,y=280)
+    customtkinter.CTkFrame(frame, width=150, height=2, bg='white').place(x=100,y=280)
 
     #################################################################
 
@@ -279,7 +279,7 @@ def display_product_details(data):
     if data:
         # Create a new LabelFrame widget to display product details
         global obj
-        obj = LabelFrame(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
+        obj = Labelcustomtkinter.CTkFrame(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
         obj.pack(side=TOP, anchor="n", padx=10,pady=10, fill='x')
 
         # Labels for database fields

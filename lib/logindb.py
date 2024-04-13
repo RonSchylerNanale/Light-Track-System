@@ -105,7 +105,7 @@ def on_leave(e):
 
 #########################################################################
     
-image_frame = Frame(window, bg="#c19a6b")
+image_frame = customtkinter.CTkFrame(window, bg="#c19a6b")
 image_frame.pack(side=LEFT, padx=0, pady=0)
 
 img1 = Image.open('images/Tanglaw231.png')
@@ -114,7 +114,7 @@ img1 = img1.resize((490, 600))
 
 img1 = ImageTk.PhotoImage(img1)
 
-frame = Frame(window, bg="#c19a6b")
+frame = customtkinter.CTkFrame(window, bg="#c19a6b")
 frame.pack(side= LEFT, padx = 10)
 
 # Create an image label
@@ -127,14 +127,14 @@ image_label = Label(frame, image=img, bg="#c19a6b")
 image_label.grid(row=0, column=0, pady=5)
 
 # Create a frame for the heading
-heading_frame = Frame(frame, bg="#c19a6b")
+heading_frame = customtkinter.CTkFrame(frame, bg="#c19a6b")
 heading_frame.grid(row=2, column=0, pady=5)
 
 # Create a label for the heading
 heading = Label(heading_frame, text='Sign in', fg='white', bg='#c19a6b', font=("Microsoft YaHei UI Light", 23, 'bold'))
 heading.pack()
 
-divider = Frame(frame, width=295, height=2, bg='white')
+divider = customtkinter.CTkFrame(frame, width=295, height=2, bg='white')
 divider.grid(row=3, column=0, pady=(10,50))
 
 
@@ -148,7 +148,7 @@ user.bind("<FocusIn>", on_enter)
 user.bind("<FocusOut>", on_leave)
 user.grid(row=4, column=0, columnspan=2, pady=5)
 
-namepad = Frame(frame, width=150, height=2, bg='white')
+namepad = customtkinter.CTkFrame(frame, width=150, height=2, bg='white')
 namepad.grid(row=5, column=0, pady=5)
 
 ################################################################
@@ -174,7 +174,7 @@ code.grid(row=6, column=0, columnspan=2, pady=5)
 #show/hide password
 toggle_password_button = Button(frame, text="Show", bg=framebg, fg='white', command=toggle_password_visibility, border=0, font=("Microsoft YaHei UI Light", 10)).grid(row=6, column=0, padx=(0,80), sticky='e')
 
-passpad = Frame(frame, width=150, height=2, bg='white')
+passpad = customtkinter.CTkFrame(frame, width=150, height=2, bg='white')
 passpad.grid(row=7, column=0, pady=5)
 
 # Button for Sign in

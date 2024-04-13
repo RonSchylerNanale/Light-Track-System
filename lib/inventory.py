@@ -8,12 +8,16 @@ from datetime import datetime
 from tkinter import simpledialog
 from tkinter import messagebox
 from tkinter import filedialog
+import customtkinter
+
 
 background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
+buttonsbg = "#704214"
 
-root = Tk()
+
+root = customtkinter.CTk()
 root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
@@ -159,7 +163,7 @@ def export_to_excel(treeview):
         data_list.append(tuple(item_data))
 
     # Convert data to a DataFrame
-    df = pd.DataFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier"])
+    df = pd.Datacustomtkinter.CTkFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier"])
 
     # Ask user to choose filename and location
     filename = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
@@ -276,14 +280,14 @@ imageicon3 = PhotoImage(file='images/search.png')
 search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
 search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 
-# Entry for search
+# search box
 Search = StringVar()
-search_entry = Entry(label, textvariable=Search, font='Helvetica 15', bg=framebg, fg='white', bd=0, highlightthickness=1, highlightbackground=framebg)
+search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
 search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
 search_entry.bind("<FocusOut>", on_leave)
-search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
+search_entry.pack(side="right", padx=10, pady=10)
 
 # Back button
 imageicon1 = PhotoImage(file='images/back_button.png')
@@ -294,11 +298,11 @@ back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
 
 ###### TABLE #########
 
-frame = Frame(root, bg="#c19a6b", bd=0)
+frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))
 frame.pack(side=TOP, fill="both", anchor="n", expand=True)
 
 # Frame for Treeview
-f = tk.Frame(frame, bd=0, bg='#704214', relief=tk.GROOVE)
+f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))
 f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 
 # Create vertical scrollbar

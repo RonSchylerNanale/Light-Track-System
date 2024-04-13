@@ -13,12 +13,16 @@ from PIL import Image, ImageTk
 from tkinter import StringVar
 from datetime import datetime
 import tkinter.messagebox as messagebox
+import customtkinter
+
 
 background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
+buttonsbg = "#704214"
 
-root = Tk()
+
+root = customtkinter.CTk()
 root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
@@ -453,16 +457,16 @@ search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 
 # search box
 Search = StringVar()
-search_entry = Entry(label, textvariable=Search, font='Helvetica 15', bg=framebg, fg='white', bd=0, highlightthickness=1, highlightbackground=framebg)
+search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
 search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
 search_entry.bind("<FocusOut>", on_leave)
-search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
+search_entry.pack(side="right", padx=10, pady=10)
 
 #################################################################
 
-frame = Frame(root, bg=framebg, bd=0)
+frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))
 frame.pack(side=TOP, fill="both")
 
 Label(frame, text='Product No: ', font='Helvetica 10 bold', fg='white', bg=framebg).grid(row=1, column=1, padx=(10, 0), pady=10, sticky="e")
@@ -484,7 +488,7 @@ Date.set(d1)
 
 ##################################################################
 
-obj = LabelFrame(root, text='Product Details:', font=15, bd=2, width=500, bg=framebg, fg='white', height=250, relief=GROOVE)
+obj = Label(root, text='Product Details:', font=15, bd=2, width=500, bg=framebg, fg='white', height=250, relief=GROOVE)
 obj.pack(side=LEFT, fill="both")
 
 Label(obj, text="Product Name:", font='Helvetica 10 bold', bg=framebg, fg='white').grid(row=0, column=0, padx=10, pady=10, sticky="w")
@@ -528,13 +532,13 @@ updateButton.grid(row=8, column=0, padx=10, pady=10)
 
 ################################################
 
-imageFrame = Frame(root, bg=framebg, bd=0)
+imageFrame = customtkinter.CTkFrame(root, fg_color=('white', framebg), corner_radius=0)
 imageFrame.pack(side=TOP, anchor="center")
 
-Label(imageFrame, text="Product Image", font='Helvetica 10 bold', bg=framebg, fg='white').grid(row=0, column=1, padx=10, pady=10, sticky="we")
+customtkinter.CTkLabel(imageFrame, text="Product Image", fg_color=('white', framebg)).grid(row=0, column=1, padx=10, pady=10, sticky="we")
 
-f = Frame(imageFrame, bd=1, bg='#704214', width=300, height=300, relief=GROOVE, border=0)
-f.grid(row=1, column=1, padx=20, pady=10, sticky='we')
+f = customtkinter.CTkFrame(imageFrame, fg_color=('white', buttonsbg))
+f.grid(row=1, column=1, padx=20, pady=0, sticky='we')
 
 lbl = Label(f, bg='#704214')
 lbl.place(x=5, y=5)
@@ -544,17 +548,17 @@ uploadButton.grid(row=3, column=1, padx=10, pady=10)
 
 ########################################################################
 
-buttonFrame = Frame(root, bg=framebg, bd=0)
+buttonFrame = customtkinter.CTkFrame(root,fg_color=('white', framebg), corner_radius=0)
 buttonFrame.pack(side=BOTTOM, anchor="n")
 
-saveButton = Button(buttonFrame, text='Save', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', border=0, command= Save)
-saveButton.grid(row=1, column=2, padx=10, pady=10)
+save_button = customtkinter.CTkButton(buttonFrame, text='Save', fg_color=("white", '#704214'), command=Save)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Save, border=0)
+save_button.grid(row=1, column=2, padx=10, pady=10)
 
-resetButton = Button(buttonFrame, text='Reset', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', border=0, command=clear)
-resetButton.grid(row=1, column=3, padx=10, pady=10)
+reset_button = customtkinter.CTkButton(buttonFrame, text='Reset', fg_color=("white", '#704214'), command=clear)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=clear, border=0)
+reset_button.grid(row=1, column=3, padx=10, pady=10)
 
-exitButton = Button(buttonFrame, text='Done', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
-exitButton.grid(row=1, column=4, padx=10, pady=10)
+exit_button = customtkinter.CTkButton(buttonFrame, text='Done', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
+exit_button.grid(row=1, column=4, padx=10, pady=10)
 
 
 root.mainloop()

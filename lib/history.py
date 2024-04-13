@@ -8,12 +8,16 @@ from datetime import datetime
 from tkinter import simpledialog
 from tkinter import messagebox
 from tkinter import filedialog
+import customtkinter
+
 
 background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
+buttonsbg = "#704214"
 
-root = Tk()
+
+root = customtkinter.CTk()
 root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
@@ -160,7 +164,7 @@ def export_to_excel(treeview):
         data_list.append(tuple(item_data))
 
     # Convert data to a DataFrame
-    df = pd.DataFrame(data_list, columns=["id", "action", "registration_number", "product_name", "timestamp"])
+    df = pd.Datacustomtkinter.CTkFrame(data_list, columns=["id", "action", "registration_number", "product_name", "timestamp"])
 
     # Define the default file name with the current timestamp
     default_file_name = "Current-Page-Log-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
@@ -237,14 +241,14 @@ imageicon3 = PhotoImage(file='images/search.png')
 search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
 search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 
-# Entry for search
+# search box
 Search = StringVar()
-search_entry = Entry(label, textvariable=Search, font='Helvetica 15', bg=framebg, fg='white', bd=0, highlightthickness=1, highlightbackground=framebg)
+search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
 search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
 search_entry.bind("<FocusOut>", on_leave)
-search_entry.pack(side=RIGHT, padx=0, pady=10, anchor="e")
+search_entry.pack(side="right", padx=10, pady=10)
 
 # Back button
 imageicon1 = PhotoImage(file='images/back_button.png')
@@ -255,11 +259,11 @@ back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
 
 ###### TABLE #########
 
-frame = Frame(root, bg="#c19a6b", bd=0)
+frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))
 frame.pack(side=TOP, fill="both", anchor="n", expand=True)
 
 # Frame for Treeview
-f = tk.Frame(frame, bd=0, bg='#704214', relief=tk.GROOVE)
+f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))
 f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 
 # Create vertical scrollbar
@@ -301,13 +305,13 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
 
-exit_button = Button(footer, text='Exit', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
+exit_button = customtkinter.CTkButton(footer, text='Exit', fg_color=("white", buttonsbg), command=Exit)
 exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-export_db_button = Button(footer, text='Export Database', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
+export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", buttonsbg), command=export)
 export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-export_page_button = Button(footer, text='Export Current Page', width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
+export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=("white", buttonsbg), command=lambda: export_to_excel(treeview))
 export_page_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 ###############################################################
