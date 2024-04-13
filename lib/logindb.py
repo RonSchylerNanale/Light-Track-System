@@ -4,6 +4,8 @@ import ast
 import mysql.connector
 from subprocess import call
 import subprocess
+from PIL import Image, ImageTk
+
 
 window = Tk()
 window.title("Sign Up")
@@ -16,6 +18,8 @@ framebg = "#c19a6b"
 framefg = "#c19a6b"
 
 #########################################################################
+
+
 
 MAX_ATTEMPTS = 5
 attempts = 0  # Moved attempts variable outside the signin function
@@ -88,7 +92,6 @@ def toggle_password_visibility():
     else:
         code.config(show='*')
 
-
 #########################################################################
 
 def on_enter(e):
@@ -102,9 +105,21 @@ def on_leave(e):
 
 #########################################################################
     
-# Create a frame for the main content
+image_frame = Frame(window, bg="#c19a6b")
+image_frame.pack(side=LEFT, padx=0, pady=0)
+
+img1 = Image.open('images/Tanglaw231.png')
+
+img1 = img1.resize((490, 600))
+
+img1 = ImageTk.PhotoImage(img1)
+
 frame = Frame(window, bg="#c19a6b")
-frame.pack(expand=True)
+frame.pack(side= LEFT, padx = 10)
+
+# Create an image label
+image_label = Label(image_frame, image=img1, bg="#c19a6b")
+image_label.grid(row=0, column=0, pady=0)
 
 # Create an image label
 img = PhotoImage(file="images/login_logo.png")

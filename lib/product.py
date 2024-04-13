@@ -24,7 +24,7 @@ root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
-root.wm_state('zoomed')
+#root.wm_state('zoomed')
 
 
 style = ttk.Style()
@@ -838,7 +838,6 @@ imageicon5 = Image.open('images/cart.png')
 imageicon6 = Image.open('images/alert.png')
 
 # Resize the images to 30x30 pixels
-imageicon1 = imageicon1.resize((30, 30))
 imageicon3 = imageicon3.resize((30, 30))
 imageicon4 = imageicon4.resize((30, 30))
 imageicon5 = imageicon5.resize((30, 30))
@@ -853,19 +852,19 @@ imageicon6 = ImageTk.PhotoImage(imageicon6)
 
 # Now use these resized images in your buttons
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
-back_button.pack(side=LEFT, padx=10, pady=15, anchor="nw")
+back_button.pack(side=LEFT, padx=10, pady=5, anchor="nw")
 
 search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
-search_button.pack(side=LEFT, padx=0, pady=10, anchor="e")
+search_button.pack(side=LEFT, padx=0, pady=5, anchor="e")
 
 add_button = Button(label, image=imageicon4, bg='#704214', fg='white', font='Helvetica 13 bold', command=add, bd=0)
-add_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
+add_button.pack(side=RIGHT, padx=10, pady=5, anchor="e")
 
 view_cart_button = Button(label, image=imageicon5, command=display_cart, bg='#704214', fg='white', bd=0)
-view_cart_button.pack(side=RIGHT, padx=0, pady=0, anchor="e")
+view_cart_button.pack(side=RIGHT, padx=0, pady=5, anchor="e")
 
 restock_button = Button(label, image=imageicon6, bg='#704214', fg='white',command=show_restock_list, bd=0)
-restock_button.pack(side=RIGHT, padx=10, pady=10, anchor="e")
+restock_button.pack(side=RIGHT, padx=10, pady=5, anchor="e")
 
 
 # search box

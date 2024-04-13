@@ -19,7 +19,7 @@ root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
-root.wm_state('zoomed')
+#root.wm_state('zoomed')
 
 
 style = ttk.Style()
@@ -314,10 +314,6 @@ f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 fscroll = ttk.Scrollbar(f, orient="vertical", style="Vertical.TScrollbar")
 fscroll.pack(side="right", fill="y")
 
-# Create horizontal scrollbar
-hscroll = ttk.Scrollbar(f, orient="horizontal", style="Horizontal.TScrollbar")
-hscroll.pack(side="bottom", fill="x")
-
 cols = ("order_id", "registration_number", "product_name", "amount_sold", "price", "total_price", "timestamp")
 
 # Create Treeview widget
@@ -331,7 +327,6 @@ for col, width in column_widths.items():
 
 # Set scrollbar commands
 fscroll.config(command=treeview.yview)
-hscroll.config(command=treeview.xview)
 
 # Set headings using SortableTreeview's set_heading method
 heading_map = {"order_id": "#1", "registration_number": "#2", "product_name": "#3", "amount_sold": "#4", "price": "#5", "total_price": "#6", "timestamp": "#7"}
