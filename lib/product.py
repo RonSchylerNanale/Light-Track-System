@@ -13,13 +13,14 @@ from PIL import Image, ImageTk
 import os
 from mysql.connector import Error
 import io
+import customtkinter
 
 
 background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
 
-root = Tk()
+root = customtkinter.CTk()
 root.title("Light Track System")
 root.geometry("800x600+0+0")
 root.config(bg = background)
@@ -879,7 +880,7 @@ search_entry.pack(side=LEFT, padx=0, pady=10, anchor="e")
 orderhistory_button = Button(label, text='Order History', width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=orderlogs, border=0)
 orderhistory_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-archive_button = Button(label, text='Archive', width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
+archive_button = customtkinter.CTkButton(label, text='Archive')#, width=10, height=1, font='Helvetica 10 bold', bg=framebg, fg='white', command=archive, border=0)
 archive_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 #################################################################
