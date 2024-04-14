@@ -551,14 +551,14 @@ uploadButton.grid(row=3, column=1, padx=10, pady=10)
 buttonFrame = customtkinter.CTkFrame(root,fg_color=('white', framebg), corner_radius=0)
 buttonFrame.pack(side=BOTTOM, anchor="n")
 
-save_button = customtkinter.CTkButton(buttonFrame, text='Save', fg_color=("white", '#704214'), command=Save)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Save, border=0)
-save_button.grid(row=1, column=2, padx=10, pady=10)
+saveButton = customtkinter.CTkButton(buttonFrame, text='Save', fg_color=("white", '#704214'), command=Save)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Save, border=0)
+saveButton.grid(row=1, column=2, padx=10, pady=10)
 
-reset_button = customtkinter.CTkButton(buttonFrame, text='Reset', fg_color=("white", '#704214'), command=clear)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=clear, border=0)
-reset_button.grid(row=1, column=3, padx=10, pady=10)
+resetButton = customtkinter.CTkButton(buttonFrame, text='Reset', fg_color=("white", '#704214'), command=clear)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=clear, border=0)
+resetButton.grid(row=1, column=3, padx=10, pady=10)
 
-exit_button = customtkinter.CTkButton(buttonFrame, text='Done', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
-exit_button.grid(row=1, column=4, padx=10, pady=10)
+exitButton = customtkinter.CTkButton(buttonFrame, text='Done', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
+exitButton.grid(row=1, column=4, padx=10, pady=10)
 
 
 root.mainloop()
