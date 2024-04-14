@@ -81,9 +81,6 @@ class SortableTreeview(ttk.Treeview):
 
 ################################################################
 
-def Exit():
-    root.destroy()
-
 ################################################################
     
 def back():
@@ -125,60 +122,7 @@ def load_data():
 
 ################################################################
         
-def export():
-    # Connect to MySQL database
-    try:
-        connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="LTS",
-            port = 3306
-        )
-
-        # Define SQL query to fetch data
-        query = "SELECT * FROM archive"
-
-        # Execute the query and fetch data into a pandas DataFrame
-        df = pd.read_sql(query, connection)
-
-        # Define the Excel file name
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        excel_file = "Products-" + current_time + ".xlsx"
-        # Write DataFrame to Excel file
-        df.to_excel(excel_file, index=False)
-
-        print("Data exported to Excel successfully.")
-
-    except mysql.connector.Error as e:
-        print("Error connecting to MySQL:", e)
-
-    finally:
-        if connection.is_connected():
-            connection.close()
-
 ################################################################
-
-def export_to_excel(treeview):
-    # Get the data from the Treeview
-    items = treeview.get_children("")
-    data_list = []
-    for item in items:
-        item_data = []
-        for value in treeview.item(item, "values"):
-            item_data.append(value)
-        data_list.append(tuple(item_data))
-
-    # Convert data to a DataFrame
-    df = pd.DataFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier"])
-
-    # Ask user to choose filename and location
-    filename = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
-    if filename:
-        # Export DataFrame to Excel
-        df.to_excel(filename, index=False)
-        print("Data exported to", filename)
-        messagebox.showinfo("Data exported to", filename)
 
 ################################################################
 
@@ -403,16 +347,7 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 # Export buttons
 
 unarchive_button = customtkinter.CTkButton(footer, text="Unarchive", fg_color=("white", '#704214'), command=unarchive)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=unarchive, border=0)
-unarchive_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
-
-exit_button = customtkinter.CTkButton(footer, text='Exit', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
-exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
-
-export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", '#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
-export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
-
-export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=("white", '#704214'), command=lambda: export_to_excel(treeview))#, width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
-export_page_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
+unarchive_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 ###############################################################
 

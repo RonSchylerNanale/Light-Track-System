@@ -662,8 +662,8 @@ def select_product_for_order(data):
     if data:
         # Create a new Frame widget to display product details
         global obj
-        obj = customtkinter.CTkFrame(root, fg_color=("white", framebg), corner_radius=0)#, bd=0, width=350, bg=framebg, relief=GROOVE)
-        obj.pack(side=TOP, anchor="n", padx=10, pady=10, fill='x')
+        obj = customtkinter.CTkFrame(root, fg_color=("white", framebg), border_width=0, border_color=framebg, corner_radius=0)
+        obj.pack(side=TOP, anchor="nw", padx=0, pady=10)
 
         # Labels for database fields
         labels = ['Product No:', 'Product Name:', 'Category:', 'Description:', 'Date:', 'Price:', 'Quantity:', 'Attributes:', 'Supplier:', "Image:"]
@@ -682,20 +682,27 @@ def select_product_for_order(data):
         button_frame = customtkinter.CTkFrame(obj, fg_color=("white", framebg))
         button_frame.grid(row=rows, column=0, columnspan=3, padx=10, pady=10)
 
-          # Button to select the product for making orders
-        Button(button_frame, text="Add to Cart", font='Arial 10 bold', bg='#704214', fg='white', command=lambda: submit_order(data, registration_number, product_name), bd=0).pack(side=LEFT, padx=(0, 5))
+        # Button to select the product for making orders
+        add_to_cart_button = customtkinter.CTkButton(button_frame,text="Add to Cart", fg_color=("white", '#704214'), command=lambda: submit_order(data, registration_number, product_name))
+        add_to_cart_button.grid(row=0, column=0, pady=5, padx=(0, 5))
 
         # Button to archive the selected product
-        Button(button_frame, text="Archive", font='Arial 10 bold', bg='#FF5733', fg='white', command=lambda: archive_product(data), bd=0).pack(side=LEFT, padx=(0, 5))
+        archive_button = customtkinter.CTkButton(button_frame, text="Archive", fg_color=("white", '#FF5733'), command=lambda: archive_product(data))
+        archive_button.grid(row=0, column=1, pady=5, padx=(0, 5))
 
         # Button to update the selected product
-        Button(button_frame, text="Update", font='Arial 10 bold', bg='#4287f5', fg='white', command=lambda: update_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
+        update_button = customtkinter.CTkButton(button_frame, text="Update", fg_color=("white", '#4287f5'), command=lambda: update_product(data))
+        update_button.grid(row=1, column=0,pady=5, padx=(0, 5))
 
         # Button to restock the selected product
-        Button(button_frame, text="Restock", font='Arial 10 bold', bg='#1E8449', fg='white', command=lambda: restock_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
+        restock_button = customtkinter.CTkButton(button_frame, text="Restock", fg_color=("white", '#1E8449'), command=lambda: restock_product(data))
+        restock_button.grid(row=1, column=1,pady=5, padx=(0, 5))
 
         # Button to delete the selected product
-        Button(button_frame, text="Delete", font='Arial 10 bold', bg='#FF5733', fg='white', command=lambda: delete_product(data), bd=0).pack(side=LEFT, padx=(5, 0))
+        delete_button = customtkinter.CTkButton(button_frame, text="Delete", fg_color=("white", '#FF5733'), command=lambda: delete_product(data))
+        delete_button.grid(row=2, column=0,pady=5, padx=(0, 5))
+
+
 
     else:
         # If data is None, display a message indicating no data found
@@ -897,15 +904,15 @@ archive_button.pack(side="right", padx=5)
 
 ###### TABLE #########
 
-frame = customtkinter.CTkFrame(root, fg_color=("white", framebg), corner_radius=0)#, bg="#c19a6b", bd=0)
+frame = customtkinter.CTkFrame(root, fg_color=("white", framebg), corner_radius=0)
 frame.pack(side=LEFT, fill="both", anchor="n")
 
 # Frame for Treeview
-f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))#, bd=0, bg='#704214', relief=GROOVE)
+f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))
 f.pack(side=LEFT, fill="y", anchor="w", padx=(10,0), pady=10)
 
 # Create vertical scrollbar
-fscroll = customtkinter.CTkScrollbar(f, fg_color=(framebg))#, orient="vertical", style="Vertical.TScrollbar")
+fscroll = customtkinter.CTkScrollbar(f, fg_color=(framebg))
 fscroll.pack(side="right", fill="y")
 
 cols = ("registration", "name", "price", "quantity")
