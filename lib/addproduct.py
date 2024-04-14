@@ -144,7 +144,7 @@ def clear():
 
     product_no()
 
-    saveButton.config(state = 'normal')
+    saveButton.configure(state = 'normal')
 
     try:
         # Load and display the default image
@@ -335,7 +335,7 @@ def search():
     text = Search.get()
 
     clear()
-    saveButton.config(state='disabled')
+    saveButton.configure(state='disabled')
 
     try:
         conn = mysql.connector.connect(
