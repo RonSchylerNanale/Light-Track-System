@@ -662,7 +662,7 @@ def select_product_for_order(data):
     if data:
         # Create a new Frame widget to display product details
         global obj
-        obj = customtkinter.CTkFrame(root, fg_color=("white", framebg))#, bd=0, width=350, bg=framebg, relief=GROOVE)
+        obj = customtkinter.CTkFrame(root, fg_color=("white", framebg), corner_radius=0)#, bd=0, width=350, bg=framebg, relief=GROOVE)
         obj.pack(side=TOP, anchor="n", padx=10, pady=10, fill='x')
 
         # Labels for database fields
@@ -859,9 +859,6 @@ imageicon6 = ImageTk.PhotoImage(imageicon6)
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=5, anchor="nw")
 
-search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
-search_button.pack(side=LEFT, padx=0, pady=5, anchor="e")
-
 add_button = Button(label, image=imageicon4, bg='#704214', fg='white', font='Helvetica 13 bold', command=add, bd=0)
 add_button.pack(side=RIGHT, padx=10, pady=5, anchor="e")
 
@@ -880,6 +877,9 @@ search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
 search_entry.bind("<FocusOut>", on_leave)
 search_entry.pack(side="left", padx=10, pady=10)
+
+search_button = Button(label, image=imageicon3, bg='#704214', fg='white', font='Helvetica 13 bold', command=search, bd=0)
+search_button.pack(side=LEFT, padx=0, pady=5, anchor="e")
 
 # Button frame
 button_frame = customtkinter.CTkFrame(label, fg_color=("transparent"), corner_radius=0)
@@ -905,7 +905,7 @@ f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))#, bd=0, bg='#7042
 f.pack(side=LEFT, fill="y", anchor="w", padx=(10,0), pady=10)
 
 # Create vertical scrollbar
-fscroll = customtkinter.CTkScrollbar(f)#, orient="vertical", style="Vertical.TScrollbar")
+fscroll = customtkinter.CTkScrollbar(f, fg_color=(framebg))#, orient="vertical", style="Vertical.TScrollbar")
 fscroll.pack(side="right", fill="y")
 
 cols = ("registration", "name", "price", "quantity")
@@ -932,14 +932,6 @@ for col, col_id in heading_map.items():
 load_data()
 
 treeview.bind("<<TreeviewSelect>>", on_item_select)
-
-################################################################
-
-obj = Label(root, text='Product Details:', font=15, bd=0, width=350, bg=framebg, fg='white', height=270, relief=GROOVE)
-obj.pack(side=TOP, anchor="n", padx = 10, pady = 10, fill='x')
-
-# Labels for database fields
-labels = ['Product No:', 'Product Name:', 'Category:', 'Description:', 'Date:', 'Price:', 'Quantity:', 'Attributes:', 'Supplier:', 'Image:']
 
 ################################################################
 

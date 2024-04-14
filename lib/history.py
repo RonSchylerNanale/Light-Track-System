@@ -164,7 +164,7 @@ def export_to_excel(treeview):
         data_list.append(tuple(item_data))
 
     # Convert data to a DataFrame
-    df = pd.Datacustomtkinter.CTkFrame(data_list, columns=["id", "action", "registration_number", "product_name", "timestamp"])
+    df = pd.DataFrame(data_list, columns=["id", "action", "registration_number", "product_name", "timestamp"])
 
     # Define the default file name with the current timestamp
     default_file_name = "Current-Page-Log-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"

@@ -135,7 +135,7 @@ def export():
         df = pd.read_sql(query, connection)
 
         # Prompt the user to select a file name and location
-        default_file_name = "Products-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
+        default_file_name = "Inventory-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
         filename = filedialog.asksaveasfilename(defaultextension=".xlsx", initialfile=default_file_name, filetypes=[("Excel files", "*.xlsx")])
 
         if filename:
@@ -163,10 +163,12 @@ def export_to_excel(treeview):
         data_list.append(tuple(item_data))
 
     # Convert data to a DataFrame
-    df = pd.Datacustomtkinter.CTkFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier"])
+    df = pd.DataFrame(data_list, columns=["registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier"])
 
-    # Ask user to choose filename and location
-    filename = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
+    # Prompt the user to select a file name and location
+    default_file_name = "Inventory-" + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".xlsx"
+    filename = filedialog.asksaveasfilename(defaultextension=".xlsx", initialfile=default_file_name, filetypes=[("Excel files", "*.xlsx")])
+    
     if filename:
         # Export DataFrame to Excel
         df.to_excel(filename, index=False)
@@ -306,12 +308,8 @@ f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))
 f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 
 # Create vertical scrollbar
-fscroll = ttk.Scrollbar(f, orient="vertical", style="Vertical.TScrollbar")
+fscroll = customtkinter.CTkScrollbar(f, fg_color=(framebg))
 fscroll.pack(side="right", fill="y")
-
-# Create horizontal scrollbar
-hscroll = ttk.Scrollbar(f, orient="horizontal", style="Horizontal.TScrollbar")
-hscroll.pack(side="bottom", fill="x")
 
 cols = ("registration", "name", "category", "description", "date", "price", "quantity", "attributes", "supplier")
 
@@ -325,8 +323,7 @@ for col, width in column_widths.items():
     treeview.column(col, width=width)
 
 # Set scrollbar commands
-fscroll.config(command=treeview.yview)
-hscroll.config(command=treeview.xview)
+fscroll.configure(command=treeview.yview)
 
 # Set headings using SortableTreeview's set_heading method
 heading_map = {"registration": "#1", "name": "#2", "category": "#3", "description": "#4", "date": "#5", "price": "#6", "quantity": "#7", "attributes": "#8", "supplier": "#9"}
@@ -344,16 +341,16 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
 
-exit_button = Button(footer, text='Exit', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
+exit_button = customtkinter.CTkButton(footer, text='Exit', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
 exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-export_db_button = Button(footer, text='Export Database', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
+export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", '#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
 export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-export_page_button = Button(footer, text='Export Current Page', width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
+export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=("white", '#704214'), command=lambda: export_to_excel(treeview))#, width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
 export_page_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-import_button = Button(footer, text='Import', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=import_file, border=0)
+import_button = customtkinter.CTkButton(footer, text='Import', fg_color=("white", '#704214'), command=import_file)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=import_file, border=0)
 import_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 ###############################################################
