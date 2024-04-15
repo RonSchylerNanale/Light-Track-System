@@ -20,8 +20,6 @@ buttonsbg = "#704214"
 
 #########################################################################
 
-
-
 MAX_ATTEMPTS = 5
 attempts = 0  # Moved attempts variable outside the signin function
 

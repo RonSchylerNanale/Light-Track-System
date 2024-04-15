@@ -515,7 +515,7 @@ Price = IntVar()
 price_entry = Entry(obj, textvariable=Price, width=20, font='Helvetica 10 bold', bg='white')
 price_entry.grid(row=3, column=2, padx=10, pady=10)
 
-Quantity = StringVar()
+Quantity = IntVar()
 quanti_entry = Entry(obj, textvariable=Quantity, width=20, font='Helvetica 10 bold', bg='white')
 quanti_entry.grid(row=4, column=2, padx=10, pady=10)
 
@@ -529,6 +529,9 @@ supply_entry.grid(row=6, column=2, padx=10, pady=10)
 
 updateButton = customtkinter.CTkButton(obj, text='Update', fg_color=('white', buttonsbg), command= Update)
 updateButton.grid(row=8, column=0, padx=10, pady=10)
+
+resetButton = customtkinter.CTkButton(obj, text='Clear', fg_color=("white", '#704214'), command=clear)
+resetButton.grid(row=8, column=2, padx=10, pady=10)
 
 ################################################
 
@@ -553,9 +556,6 @@ buttonFrame.pack(side=BOTTOM, anchor="n")
 
 saveButton = customtkinter.CTkButton(buttonFrame, text='Save', fg_color=("white", '#704214'), command=Save)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Save, border=0)
 saveButton.grid(row=1, column=2, padx=10, pady=10)
-
-resetButton = customtkinter.CTkButton(buttonFrame, text='Reset', fg_color=("white", '#704214'), command=clear)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=clear, border=0)
-resetButton.grid(row=1, column=3, padx=10, pady=10)
 
 exitButton = customtkinter.CTkButton(buttonFrame, text='Done', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
 exitButton.grid(row=1, column=4, padx=10, pady=10)

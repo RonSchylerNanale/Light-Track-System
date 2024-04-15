@@ -344,7 +344,7 @@ def submit_order(product_data, registration_number, product_name):
         # Add the product to the cart
         add_to_cart(product_data, registration_number, amount_ordered, price)
 
-        log_changes("sold", registration_number, product_name)
+        log_changes("Sold", registration_number, product_name)
 
         # Close the order window
         order_window.destroy()
@@ -465,7 +465,7 @@ def display_cart():
             refresh_treeview()
 
     # Add a single Checkout button for all items
-    submit_button = Button(cart_window, text="Checkout", font='Helvetica 10 bold', bg="green", fg="white", command=checkout_all, bd=0)
+    submit_button = customtkinter.CTkButton(cart_window, text="Checkout", fg_color=("white", buttonsbg), command=checkout_all)
     submit_button.pack(side=BOTTOM, padx=10, pady=10)
 
 #################################################################
@@ -619,6 +619,9 @@ def delete_product(data):
     if confirmation:
         if delete_product_from_database(registration_number):
             messagebox.showinfo("Success", "Product deleted successfully!")
+
+            log_changes("Deleted", data[0], data[1])
+
             refresh_treeview()
         else:
             messagebox.showerror("Error", "Failed to delete product!")
@@ -730,6 +733,8 @@ def restock_product(data):
 
             # Show confirmation message
             messagebox.showinfo("Restock Successful", f"{quantity_to_add} units added to {data[1]}.")
+
+            log_changes("Restocked", data[0], data[1])
         
             refresh_treeview()
 
