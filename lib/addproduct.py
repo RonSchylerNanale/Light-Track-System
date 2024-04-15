@@ -466,7 +466,7 @@ search_entry.pack(side="right", padx=10, pady=10)
 
 #################################################################
 
-frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))
+frame = customtkinter.CTkFrame(root, fg_color=(framebg))
 frame.pack(side=TOP, fill="both")
 
 Label(frame, text='Product No: ', font='Helvetica 10 bold', fg='white', bg=framebg).grid(row=1, column=1, padx=(10, 0), pady=10, sticky="e")
@@ -488,7 +488,7 @@ Date.set(d1)
 
 ##################################################################
 
-obj = Label(root, text='Product Details:', font=15, bd=2, width=500, bg=framebg, fg='white', height=250, relief=GROOVE)
+obj = Label(root, font=15, bd=2, width=500, bg=framebg, fg='white', height=250, relief=GROOVE)
 obj.pack(side=LEFT, fill="both")
 
 Label(obj, text="Product Name:", font='Helvetica 10 bold', bg=framebg, fg='white').grid(row=0, column=0, padx=10, pady=10, sticky="w")
@@ -527,7 +527,7 @@ Supplier = StringVar()
 supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bold', bg='white')
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
 
-updateButton = Button(obj, text='Update', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', border=0, command= Update)
+updateButton = customtkinter.CTkButton(obj, text='Update', fg_color=('white', buttonsbg), command= Update)
 updateButton.grid(row=8, column=0, padx=10, pady=10)
 
 ################################################
@@ -543,7 +543,7 @@ f.grid(row=1, column=1, padx=20, pady=0, sticky='we')
 lbl = Label(f, bg='#704214')
 lbl.place(x=5, y=5)
 
-uploadButton = Button(imageFrame, text='Upload Photo', width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', border=0, command=show_image)
+uploadButton = customtkinter.CTkButton(imageFrame, text='Upload Photo', fg_color=('white', buttonsbg), command=show_image)
 uploadButton.grid(row=3, column=1, padx=10, pady=10)
 
 ########################################################################

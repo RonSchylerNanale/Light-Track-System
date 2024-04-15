@@ -308,15 +308,15 @@ refresh_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 ###### TABLE #########
 
-frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))#, bg="#c19a6b", bd=0)
+frame = customtkinter.CTkFrame(root, fg_color=(framebg))#, bg="#c19a6b", bd=0)
 frame.pack(side=TOP, fill="both", anchor="n", expand=True)
 
 # Frame for Treeview
-f = customtkinter.CTkFrame(frame)#, bd=0, bg='#704214', relief=tk.GROOVE)
+f = customtkinter.CTkFrame(frame, fg_color=(framebg))#, bd=0, bg='#704214', relief=tk.GROOVE)
 f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 
 # Create vertical scrollbar
-fscroll = customtkinter.CTkScrollbar(f, fg_color=("white", framebg))#, orient="vertical", style="Vertical.TScrollbar")
+fscroll = customtkinter.CTkScrollbar(f, fg_color=(framebg))#, orient="vertical", style="Vertical.TScrollbar")
 fscroll.pack(side="right", fill="y")
 
 cols = ("order_id", "registration_number", "product_name", "amount_sold", "price", "total_price", "timestamp")

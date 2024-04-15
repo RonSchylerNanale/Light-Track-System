@@ -259,20 +259,16 @@ back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
 
 ###### TABLE #########
 
-frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))
+frame = customtkinter.CTkFrame(root, fg_color=(framebg))
 frame.pack(side=TOP, fill="both", anchor="n", expand=True)
 
 # Frame for Treeview
-f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))
+f = customtkinter.CTkFrame(frame, fg_color=(framebg))
 f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 
 # Create vertical scrollbar
-fscroll = ttk.Scrollbar(f, orient="vertical", style="Vertical.TScrollbar")
+fscroll = customtkinter.CTkScrollbar(f)
 fscroll.pack(side="right", fill="y")
-
-# Create horizontal scrollbar
-hscroll = ttk.Scrollbar(f, orient="horizontal", style="Horizontal.TScrollbar")
-hscroll.pack(side="bottom", fill="x")
 
 cols = ("id", "action", "registration_number", "product_name", "timestamp")
 
@@ -286,8 +282,7 @@ for col, width in column_widths.items():
     treeview.column(col, width=width)
 
 # Set scrollbar commands
-fscroll.config(command=treeview.yview)
-hscroll.config(command=treeview.xview)
+fscroll.configure(command=treeview.yview)
 
 # Set headings using SortableTreeview's set_heading method
 heading_map = {"id": "#1", "action": "#2", "registration_number": "#3", "product_name": "#4", "timestamp": "#5"}

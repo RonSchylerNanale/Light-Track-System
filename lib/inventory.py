@@ -300,11 +300,11 @@ back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
 
 ###### TABLE #########
 
-frame = customtkinter.CTkFrame(root, fg_color=("white", framebg))
+frame = customtkinter.CTkFrame(root, fg_color=(framebg))
 frame.pack(side=TOP, fill="both", anchor="n", expand=True)
 
 # Frame for Treeview
-f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))
+f = customtkinter.CTkFrame(frame, fg_color=(framebg))
 f.pack(side=TOP, fill="both",pady=10,padx=10, anchor="nw", expand=True)
 
 # Create vertical scrollbar

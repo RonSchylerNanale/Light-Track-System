@@ -15,8 +15,6 @@ from mysql.connector import Error
 import io
 import customtkinter
 
-customtkinter.set_appearance_mode("Custom Accent")
-customtkinter.set_default_color_theme("blue")
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -835,7 +833,6 @@ check_quantity()
 
 #################################################################
 
-
 #### HEADER ####
 
 # top frames
@@ -904,11 +901,11 @@ archive_button.pack(side="right", padx=5)
 
 ###### TABLE #########
 
-frame = customtkinter.CTkFrame(root, fg_color=("white", framebg), corner_radius=0)
+frame = customtkinter.CTkFrame(root, fg_color=(framebg), corner_radius=0)
 frame.pack(side=LEFT, fill="both", anchor="n")
 
 # Frame for Treeview
-f = customtkinter.CTkFrame(frame, fg_color=("white", framebg))
+f = customtkinter.CTkFrame(frame, fg_color=(framebg))
 f.pack(side=LEFT, fill="y", anchor="w", padx=(10,0), pady=10)
 
 # Create vertical scrollbar
