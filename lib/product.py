@@ -448,7 +448,7 @@ def display_cart():
 
     # Display cart items with remove button for each item
     for idx, item in enumerate(cart_items):
-        item_frame = customtkinter.CTkFrame(cart_window, bg=background)
+        item_frame = customtkinter.CTkFrame(cart_window, fg_color=('white', framebg))
         item_frame.pack(padx=10, pady=5, fill="x")
 
         item_label = Label(item_frame, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}", bg=background)

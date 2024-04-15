@@ -5,12 +5,10 @@ import subprocess
 from tkinter import PhotoImage
 import customtkinter
 
-
 background = "#c19a6b"
 framebg = "#c19a6b"
 framefg = "#c19a6b"
 buttonsbg = "#704214"
-
 
 root = customtkinter.CTk()
 root.title("Light Track System")
@@ -18,7 +16,6 @@ root.geometry("800x600+0+0")
 root.config(bg = background)
 root.resizable(True,True)
 #root.wm_state('zoomed')
-
 
 ################################################################
 
@@ -84,7 +81,5 @@ database.grid(row=1, column=2)
 
 database = Button(button_frame, image=imageicon7, bg='#c19a6b', border=0, command=open_history)
 database.grid(row=1, column=3)
-
-
 
 root.mainloop()
