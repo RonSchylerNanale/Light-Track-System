@@ -9,11 +9,18 @@ import customtkinter
 
 
 
-window = Tk()
-window.title("Light Track System")
+window = customtkinter.CTk()
+window.title("Sign Up")
 window.geometry('800x600+0+0')
-window.configure(bg = "#c19a6b")
+
 window.resizable(True,True)
+
+background = "#c19a6b"
+framebg = "#c19a6b"
+framefg = "#c19a6b"
+buttonsbg = "#704214"
+
+window.configure(fg_color=framebg)
 
 
 def open_signin():
@@ -92,17 +99,17 @@ def change():
 
 ################################################################
 
-image_frame = Frame(window, bg="#c19a6b")
+image_frame = customtkinter.CTkFrame(window, fg_color=(framebg))
 image_frame.pack(side=LEFT, padx=0, pady=0)
 
 img1 = Image.open('images/Tanglaw231.png')
 
-img1 = img1.resize((490, 600))
+img1 = img1.resize((670, 800))
 
 img1 = ImageTk.PhotoImage(img1)
 
 # Create a frame for the main content
-frame = Frame(window, bg="#c19a6b")
+frame = customtkinter.CTkFrame(window, fg_color=(framebg))
 frame.pack(side=LEFT, padx=10)
 
 # Create an image label
@@ -115,7 +122,7 @@ image_label = Label(frame, image=img, bg="#c19a6b")
 image_label.grid(row=0, column=0, pady=5)
 
 # Create a frame for the heading
-heading_frame = Frame(frame, bg="#c19a6b")
+heading_frame = customtkinter.CTkFrame(frame, fg_color=(framebg))
 heading_frame.grid(row=2, column=0, pady=5)
 
 # Create a label for the heading
@@ -193,9 +200,9 @@ confirmpad.grid(row=9, column=0, pady=5)
 
 #################################################################
 
-Button(frame, width=20, pady=7, text='Sign up', bg='#704214', fg='white', border=0, command=change).grid(row=10, column=0, columnspan=2, pady=5)
+customtkinter.CTkButton(frame, text='Sign up', fg_color=('white', buttonsbg), command=change).grid(row=10, column=0, columnspan=2, pady=5)
 
-Button(frame, width=15, text=' Back to Login', border=0, bg="#c19a6b", cursor='hand2', fg='white', command=open_signin).grid(row=11, column=0, columnspan=2, pady=5)
+customtkinter.CTkButton(frame, text=' Back to Login', fg_color=('white', framebg), command=open_signin).grid(row=11, column=0, columnspan=2, pady=5)
 
 
 window.mainloop()

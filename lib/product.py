@@ -568,7 +568,7 @@ def update_product(data):
 
 
     # Button to confirm the update
-    confirm_button = Button(update_window, text="Update", font='Arial 10 bold', bg='#4287f5', fg='white', command=confirm_update)
+    confirm_button = customtkinter.CTkButton(update_window, text="Update", fg_color=("white", buttonsbg), command=confirm_update)
     confirm_button.grid(row=len(update_labels), columnspan=2, pady=10)
 
     entry_fields = [entry for entry in update_window.children.values() if isinstance(entry, Entry)]
