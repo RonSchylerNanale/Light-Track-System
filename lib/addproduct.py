@@ -14,6 +14,8 @@ from tkinter import StringVar
 from datetime import datetime
 import tkinter.messagebox as messagebox
 import customtkinter
+import tkinter as tk
+
 
 
 background = "#c19a6b"
@@ -191,27 +193,27 @@ def convertToBinary(img_variable):
 ################################################################
     
 def Save():
-    R1 = Registration.get()
-    N1 = Name.get()
-    C1 = Category.get()
-    D2 = Description.get()
-    D1 = Date.get()
-    P1 = Price.get()
-    Q1 = Quantity.get()
-    A1 = Attributes.get()
-    S1 = Supplier.get()
-
-    # Get the image data if available
-    img_data = None
-    if 'img_variable' in globals() and img_variable:
-        img_data = convertToBinary(filename)  # pass filename
-
-    # Check if any required data is missing
-    if N1 == "" or C1 == "" or D2 == "" or D1 == "" or P1 == "" or Q1 == "" or A1 == "" or S1 == "":
-        messagebox.showerror("Error", "Some data is missing!")
-        return
-
     try:
+        R1 = Registration.get()
+        N1 = Name.get()
+        C1 = Category.get()
+        D2 = Description.get()
+        D1 = Date.get()
+        P1 = Price.get()
+        Q1 = Quantity.get()
+        A1 = Attributes.get()
+        S1 = Supplier.get()
+
+        # Get the image data if available
+        img_data = None
+        if 'img_variable' in globals() and img_variable:
+            img_data = convertToBinary(filename)  # pass filename
+
+        # Check if any required data is missing
+        if N1 == "" or C1 == "" or D2 == "" or D1 == "" or P1 == "" or Q1 == "" or A1 == "" or S1 == "":
+            messagebox.showerror("Error", "Some data is missing!")
+            return
+
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
@@ -259,6 +261,10 @@ def Save():
     except mysql.connector.Error as e:
         print("Error:", e)
         messagebox.showerror("Error", "Failed to add product!")
+
+    except tk.TclError as tcl_err:
+        print("TclError:", tcl_err)
+        messagebox.showerror("Error", "Please enter only numbers for the Price and Quantity fields!")
 
     finally:
         if conn.is_connected():

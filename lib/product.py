@@ -368,7 +368,7 @@ def submit_order(product_data, registration_number, product_name):
     price_entry.grid(row=2, column=1, padx=5, pady=5)
 
     # Add a button to submit the order
-    submit_button = Button(order_window, text="Add to Cart", bg="#704214", fg='white', command=submit_order)
+    submit_button = customtkinter.CTkButton(order_window, text="Add to Cart", fg_color=('white', buttonsbg), command=submit_order)
     submit_button.grid(row=3, columnspan=2, padx=0, pady=5)
 
     # Make amount_entry accessible within the function
