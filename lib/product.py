@@ -739,7 +739,7 @@ def select_product_for_order(data):
 
 #################################################################
 
-s
+def restock_product(data):
     # Function to handle restocking of the selected product
     quantity_to_add = simpledialog.askinteger("Restock Product", "Enter the quantity to restock:")
     if quantity_to_add is not None and quantity_to_add > 0:
