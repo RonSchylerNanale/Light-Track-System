@@ -455,14 +455,42 @@ def display_cart():
         remove_button = Button(item_frame, text="Remove", font='Helvetica 10 bold', bg="RED", fg="White",command=lambda i=item: remove_item_from_cart(i))
         remove_button.pack(side=RIGHT)
 
-    # Define a function to handle checkout for all items
     def checkout_all():
         if not cart_items:
-            messagebox.showerror("Error", "No items on cart")
+            messagebox.showerror("Error", "No items in the cart")
         else:
+            total_amount = 0
+            total_price = 0
+            confirmation_message = "Transaction complete for the following items:\n\n"
             for item in cart_items:
-                checkout(item['registration_number'], item, item['amount_ordered'], item['price'])
+                product_name = item['product_name']
+                amount_ordered = item['amount_ordered']
+                price = item['price']
+                try:
+                    amount_ordered = float(amount_ordered)
+                    price = float(price)
+                    total_price += amount_ordered * price
+                    total_amount += amount_ordered
+
+                    update_query = "UPDATE products SET quantity = quantity - %s WHERE name = %s"
+                    cursor.execute(update_query, (amount_ordered, product_name))
+                    mydb.commit()
+
+                    insert_query = "INSERT INTO order_log (registration_number, product_name, amount_sold, price, total_price) VALUES (%s, %s, %s, %s, %s)"
+                    cursor.execute(insert_query, (item['registration_number'], product_name, amount_ordered, price, total_price))
+                    mydb.commit()
+
+                    confirmation_message += f"Product: {product_name}\nQuantity Ordered: {amount_ordered}\nTotal Price: {amount_ordered * price}\n\n"
+                except mysql.connector.Error as error:
+                    print("Failed to update quantity in the products table or record the order:", error)
+            
+            confirmation_message += f"Total Amount: {total_amount}\nTotal Price: {total_price}"
+            messagebox.showinfo("Transaction Complete", confirmation_message)
+            cart_items.clear()
             refresh_treeview()
+            cart_window.destroy()
+
+
 
     # Add a single Checkout button for all items
     submit_button = customtkinter.CTkButton(cart_window, text="Checkout", fg_color=("white", buttonsbg), command=checkout_all)
@@ -500,7 +528,7 @@ def archive_product(data):
         refresh_treeview()
 
     except mysql.connector.Error as error:
-        print("Error archiving product:", error)
+        messagebox.showerror("Error", f"Error archiving product: {error}")
     finally:
         if 'connection' in locals():
             cursor.close()
@@ -605,7 +633,7 @@ def delete_product_from_database(registration_number):
 
         return True
     except mysql.connector.Error as error:
-        print("Error deleting product:", error)
+        messagebox.showerror("Error", f"Error deleting product: {error}")
         return False
 
 #################################################################
@@ -711,7 +739,7 @@ def select_product_for_order(data):
 
 #################################################################
 
-def restock_product(data):
+s
     # Function to handle restocking of the selected product
     quantity_to_add = simpledialog.askinteger("Restock Product", "Enter the quantity to restock:")
     if quantity_to_add is not None and quantity_to_add > 0:
