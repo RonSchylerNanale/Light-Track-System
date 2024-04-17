@@ -341,9 +341,6 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
 
-exit_button = customtkinter.CTkButton(footer, text='Exit', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
-exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
-
 export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", '#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
 export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 

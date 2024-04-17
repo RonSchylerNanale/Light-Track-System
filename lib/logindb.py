@@ -116,7 +116,7 @@ img1 = img1.resize((670, 800))
 img1 = ImageTk.PhotoImage(img1)
 
 frame = customtkinter.CTkFrame(window, fg_color=(framebg))
-frame.pack(side= LEFT, padx = 10)
+frame.pack(side= LEFT, padx = 10, anchor='center')
 
 # Create an image label
 image_label = Label(image_frame, image=img1, bg="#c19a6b")

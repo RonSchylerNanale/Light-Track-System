@@ -233,7 +233,7 @@ def on_leave(e):
 #### HEADER ####
 
 # Label
-label = Label(root, text='History', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
+label = Label(root, text='Logs', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
 # Search button
@@ -297,11 +297,6 @@ load_data()
 
 footer = Label(root,  width=10, font='Helvetica 10 bold', height=3, bg=framebg, fg="white", anchor=CENTER)
 footer.pack(side=BOTTOM, fill="x", anchor = "sw")
-
-# Export buttons
-
-exit_button = customtkinter.CTkButton(footer, text='Exit', fg_color=("white", buttonsbg), command=Exit)
-exit_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", buttonsbg), command=export)
 export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
