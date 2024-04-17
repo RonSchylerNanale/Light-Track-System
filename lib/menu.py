@@ -4,6 +4,8 @@ from PIL import Image, ImageTk
 import subprocess
 from tkinter import PhotoImage
 import customtkinter
+import tkinter as tk
+import mysql.connector
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -86,5 +88,84 @@ database.grid(row=1, column=2)
 
 database = Button(button_frame, image=imageicon7, bg='#c19a6b', border=0, command=open_history)
 database.grid(row=1, column=3)
+
+
+
+
+# Function to connect to the MySQL database
+def connect_to_database():
+    try:
+        connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="LTS",
+            port=3306
+        )
+        return connection
+    except mysql.connector.Error as error:
+        print("Error while connecting to MySQL", error)
+        return None
+
+# Function to fetch total sales today from the database
+def get_total_sales_today(connection):
+    cursor = connection.cursor()
+    cursor.execute("SELECT SUM(total_price) FROM order_log WHERE DATE(timestamp) = CURDATE()")
+    result = cursor.fetchone()[0]
+    cursor.close()
+    return result if result else 0
+
+# Function to fetch overall sales from the database
+def get_overall_sales(connection):
+    cursor = connection.cursor()
+    cursor.execute("SELECT SUM(total_price) FROM order_log")
+    result = cursor.fetchone()[0]
+    cursor.close()
+    return result if result else 0
+
+# Function to fetch the most sold item from the database
+def get_most_sold_item(connection):
+    cursor = connection.cursor()
+    cursor.execute("SELECT product_name, COUNT(*) AS count FROM order_log GROUP BY product_name ORDER BY count DESC LIMIT 1")
+    result = cursor.fetchone()
+    cursor.close()
+    return result if result else ("N/A", 0)
+
+# Function to update the labels with the fetched data
+def update_labels():
+    total_sales_today = get_total_sales_today(db_connection)
+    overall_sales = get_overall_sales(db_connection)
+    most_sold_item_name, most_sold_item_count = get_most_sold_item(db_connection)
+
+    total_sales_today_label.configure(text="Total Sales Today: Php {:.2f}".format(total_sales_today))
+    overall_sales_label.configure(text="Overall Sales: Php {:.2f}".format(overall_sales))
+    most_sold_item_label.configure(text="Most Sold Item: {} ({} times)".format(most_sold_item_name, most_sold_item_count))
+
+# Connect to the database
+db_connection = connect_to_database()
+
+# Create a frame
+statsframe = customtkinter.CTkFrame(root, fg_color=('white', buttonsbg))
+statsframe.pack(padx=5, pady=10)
+
+# Create labels
+total_sales_today_label = customtkinter.CTkLabel(statsframe, text="Total Sales Today: Php 0.00")
+total_sales_today_label.grid(row=0, column=0, padx=10, pady=10)
+
+overall_sales_label = customtkinter.CTkLabel(statsframe, text="Overall Sales: Php 0.00")
+overall_sales_label.grid(row=0, column=1, padx=10, pady=10)
+
+most_sold_item_label = customtkinter.CTkLabel(statsframe, text="Most Sold Item: N/A")
+most_sold_item_label.grid(row=0, column=2, padx=10, pady=10)
+
+# Update labels initially
+update_labels()
+
+# Update labels every 10 seconds (10000 milliseconds)
+root.after(10000, update_labels)
+
+# Run the main event loop
+root.mainloop()
+
 
 root.mainloop()

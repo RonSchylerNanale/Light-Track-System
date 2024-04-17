@@ -14,7 +14,7 @@ import os
 from mysql.connector import Error
 import io
 import customtkinter
-import tkinter.font as tkFont
+from tkinter import font
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -339,8 +339,20 @@ def submit_order(product_data, registration_number, product_name):
     def submit_order():
         # Get the amount ordered and price from the Entry widgets
         amount_ordered = amount_entry.get()
-        price = int(float(price_entry.get()))
+        price = price_entry.get()
         
+        # Validate amount entry
+        if not amount_ordered.isdigit():
+            messagebox.showerror("Error", "Please enter a numeric value for the amount.")
+            return
+
+        # Validate price entry
+        try:
+            price = int(float(price))
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid price.")
+            return
+
         # Add the product to the cart
         add_to_cart(product_data, registration_number, amount_ordered, price)
 
@@ -354,17 +366,19 @@ def submit_order(product_data, registration_number, product_name):
     order_window.title("Make Order")
     order_window.config(bg = background)
     order_window.resizable(True,True)
+
+    custom_font = font.Font(size=15)
     
     # Add labels and entry for product name, amount, and price
-    Label(order_window, text="Product Name:", bg=framebg, fg='white').grid(row=0, column=0, padx=5, pady=5)
-    Label(order_window, text=product_name, bg=framebg, fg='white').grid(row=0, column=1, padx=5, pady=5)
+    Label(order_window, text="Product Name:", bg=framebg, fg='white', font=custom_font).grid(row=0, column=0, padx=5, pady=5)
+    Label(order_window, text=product_name, bg=framebg, fg='white', font=custom_font).grid(row=0, column=1, padx=5, pady=5)
 
-    Label(order_window, text="Amount Ordered:", bg=framebg, fg='white').grid(row=1, column=0, padx=5, pady=5)
-    amount_entry = Entry(order_window)
+    Label(order_window, text="Amount Ordered:", bg=framebg, fg='white',font=custom_font).grid(row=1, column=0, padx=5, pady=5)
+    amount_entry = Entry(order_window, font=custom_font, width=10)
     amount_entry.grid(row=1, column=1, padx=5, pady=5)
 
-    Label(order_window, text="Price:", bg=framebg, fg='white').grid(row=2, column=0, padx=5, pady=5)
-    price_entry = Entry(order_window)
+    Label(order_window, text="Price:", bg=framebg, fg='white',font=custom_font).grid(row=2, column=0, padx=5, pady=5)
+    price_entry = Entry(order_window, font=custom_font, width=10)
     price_entry.grid(row=2, column=1, padx=5, pady=5)
 
     # Add a button to submit the order
@@ -399,7 +413,7 @@ def display_cart():
     # Create a new window for displaying the cart
     cart_window = Toplevel(root)
     cart_window.title("Cart")
-    cart_window.geometry("300x500+600+40")
+    cart_window.geometry("400x500+600+40")
     cart_window.configure(bg=background)  # Set background color to white
 
      # Check if cart_items is empty
@@ -449,10 +463,10 @@ def display_cart():
         item_frame = customtkinter.CTkFrame(cart_window, fg_color=('white', framebg))
         item_frame.pack(padx=10, pady=5, fill="x")
 
-        item_label = Label(item_frame, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}", bg=background)
+        item_label = customtkinter.CTkLabel(item_frame, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}", fg_color=('white', framebg))
         item_label.pack(side=LEFT)
 
-        remove_button = Button(item_frame, text="Remove", font='Helvetica 10 bold', bg="RED", fg="White",command=lambda i=item: remove_item_from_cart(i))
+        remove_button = customtkinter.CTkButton(item_frame, text="Remove", width=10, fg_color=('white', 'red'),command=lambda i=item: remove_item_from_cart(i))
         remove_button.pack(side=RIGHT)
 
     def checkout_all():
@@ -792,8 +806,6 @@ def on_item_select(event):
             select_product_for_order(data)
         else:
             print("No values associated with the selected item")
-    else:
-        print("No item selected")
 
 #################################################################
     
@@ -846,7 +858,7 @@ def show_restock_list():
             restock_label.pack(padx=5, pady=5)
         else:
             restock_list = "\n".join([product[0] for product in products_to_restock])
-            restock_label = Label(window, text=f"These products need to be restocked:\n{restock_list}")
+            restock_label = customtkinter.CTkLabel(window, text=f"These products need to be restocked:\n\n{restock_list}", fg_color=('white', 'red'))
             restock_label.pack(padx=5, pady=5)
 
         conn.close()
