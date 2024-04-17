@@ -213,7 +213,7 @@ def unarchive():
     conn.commit()
 
     # Log the unarchive action
-    log_changes("unarchived", registration, archived_product[1])
+    log_changes("Unarchived", registration, archived_product[1])
 
     refresh_treeview()
 
@@ -321,6 +321,10 @@ cols = ("registration", "name", "category", "description", "date", "price", "qua
 # Create Treeview widget
 treeview = SortableTreeview(f, show="headings", columns=cols, height=12)
 treeview.pack(side=TOP, fill="both", anchor="nw", expand=True)
+
+# Add font size of 15
+style = ttk.Style()
+style.configure("Treeview", font=("TkDefaultFont", 13))
 
 # Configure column width for each column
 column_widths = {"registration": 70, "name": 70, "category": 70, "description": 70, "date": 70, "price": 70, "quantity": 70, "attributes": 70, "supplier": 70}

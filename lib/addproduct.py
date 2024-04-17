@@ -252,7 +252,7 @@ def Save():
             cursor.execute(insert_query, data)
             conn.commit()
 
-            log_changes("added", R1, N1)
+            log_changes("Added", R1, N1)
 
             messagebox.showinfo('Info', 'Product added successfully!')
             clear()  # Clear the entry fields
@@ -319,7 +319,7 @@ def Update():
             cursor.execute(update_query, data)
             conn.commit()
 
-            log_changes("updated", R1, N1)
+            log_changes("Updated", R1, N1)
 
             messagebox.showinfo('Info', 'Product updated successfully!')
             clear()  # Clear the entry fields

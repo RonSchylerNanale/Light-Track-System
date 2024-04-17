@@ -317,6 +317,10 @@ cols = ("registration", "name", "category", "description", "date", "price", "qua
 treeview = SortableTreeview(f, show="headings", columns=cols, height=12)
 treeview.pack(side=TOP, fill="both", anchor="nw", expand=True)
 
+# Add font size of 15
+style = ttk.Style()
+style.configure("Treeview", font=("TkDefaultFont", 13))
+
 # Configure column width for each column
 column_widths = {"registration": 70, "name": 70, "category": 70, "description": 70, "date": 70, "price": 70, "quantity": 70, "attributes": 70, "supplier": 70}
 for col, width in column_widths.items():

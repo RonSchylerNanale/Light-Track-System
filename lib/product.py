@@ -14,7 +14,7 @@ import os
 from mysql.connector import Error
 import io
 import customtkinter
-
+import tkinter.font as tkFont
 
 background = "#c19a6b"
 framebg = "#c19a6b"
@@ -404,7 +404,7 @@ def display_cart():
 
      # Check if cart_items is empty
     if not cart_items:
-        Label(cart_window, text="No items added", bg=background, fg="white").pack(padx=10, pady=10)
+        customtkinter.CTkLabel(cart_window, text="No items added", fg_color=('white', framebg)).pack(padx=10, pady=10)
 
     # Define a function to handle checkout
     def checkout(registration_number, product_data, amount_ordered, price):
@@ -703,8 +703,8 @@ def select_product_for_order(data):
             if label_text == 'Image:':
                 display_image(obj, value)  # Call the display_image function
             else:
-                Label(obj, text=label_text, font='Arial 10 bold', fg='white', bg=framebg).grid(row=rows, column=0, sticky="w", padx=(10, 0), pady=3)
-                Label(obj, text=value, font='Arial 10', bg=framebg, fg='white').grid(row=rows, column=1, sticky="w", padx=0, pady=3)
+                Label(obj, text=label_text, font='Arial 13 bold', fg='white', bg=framebg).grid(row=rows, column=0, sticky="w", padx=(10, 0), pady=3)
+                Label(obj, text=value, font='Arial 13', bg=framebg, fg='white').grid(row=rows, column=1, sticky="w", padx=0, pady=3)
             rows += 1
 
         # Create a frame for buttons
@@ -842,7 +842,7 @@ def show_restock_list():
         window.configure(bg=background)
 
         if not products_to_restock:
-            restock_label = Label(window, text="No products need restocking.", bg=background, fg='white')
+            restock_label = customtkinter.CTkLabel(window, text="No products need restocking.", fg_color=('white', framebg))
             restock_label.pack(padx=5, pady=5)
         else:
             restock_list = "\n".join([product[0] for product in products_to_restock])
@@ -905,7 +905,6 @@ view_cart_button.pack(side=RIGHT, padx=0, pady=5, anchor="e")
 restock_button = Button(label, image=imageicon6, bg='#704214', fg='white',command=show_restock_list, bd=0)
 restock_button.pack(side=RIGHT, padx=10, pady=5, anchor="e")
 
-
 # search box
 Search = StringVar()
 search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
@@ -950,6 +949,11 @@ cols = ("registration", "name", "price", "quantity")
 # Create Treeview widget
 treeview = SortableTreeview(f, show="headings", columns=cols, height=12)
 treeview.pack(side=TOP, fill="both", anchor="nw", expand=True)
+
+# Add font size of 15
+style = ttk.Style()
+style.configure("Treeview", font=("TkDefaultFont", 13))
+
 
 # Configure column width for each column
 column_widths = {"registration": 100, "name": 100, "price": 100, "quantity": 100}

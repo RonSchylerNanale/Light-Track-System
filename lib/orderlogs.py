@@ -325,6 +325,10 @@ cols = ("order_id", "registration_number", "product_name", "amount_sold", "price
 treeview = SortableTreeview(f, show="headings", columns=cols, height=12)
 treeview.pack(side=TOP, fill="both", anchor="nw", expand=True)
 
+# Add font size of 15
+style = ttk.Style()
+style.configure("Treeview", font=("TkDefaultFont", 13))
+
 # Configure column width for each column
 column_widths = {"order_id": 70, "registration_number": 70, "product_name": 70, "amount_sold": 70, "price": 70, "total_price": 70, "timestamp": 70}
 for col, width in column_widths.items():
@@ -348,9 +352,6 @@ footer = Label(root,  width=10, font='Helvetica 10 bold', height=3, bg=framebg, 
 footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
-
-exit_button = customtkinter.CTkButton(footer, text='Exit', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
-exit_button.pack(side="right", padx=5, pady=0, anchor="e")
 
 export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", '#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
 export_db_button.pack(side="right", padx=5, pady=0, anchor="e")
