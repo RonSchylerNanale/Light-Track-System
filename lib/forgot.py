@@ -54,49 +54,48 @@ def change():
     U1 = user.get()
     C1 = code.get()
 
-
     # Establish connection to MySQL database
     connection = mysql.connector.connect(
         host="localhost",
         user="root",
         password="",
         database="LTS",
-        port = 3306
+        port=3306
     )
 
     # Create cursor
     cursor = connection.cursor()
 
-    select_query = "SELECT accountID FROM users WHERE username = %s"
+    select_query = "SELECT username FROM users WHERE username = %s"
     cursor.execute(select_query, (U1,))
     result = cursor.fetchone()
 
-
-    # Update query
     if result:
-            accountID = result[0]  # Assuming accountID is the first column in the result
-            # Update query
-            update_query = """UPDATE users
-                              SET username=%s, password=%s WHERE accountID=%s"""
+        # Update query
+        update_query = """UPDATE users
+                          SET password=%s WHERE username=%s"""
 
-            # Data tuple for query parameters
-            data = (U1, C1, accountID)
+        # Data tuple for query parameters
+        data = (U1, C1)
 
-    # Execute the update query
-    cursor.execute(update_query, data)
+        # Execute the update query
+        cursor.execute(update_query, data)
 
-    # Commit changes
-    connection.commit()
+        # Commit changes
+        connection.commit()
+
+        # Show success message
+        messagebox.showinfo("Update", "Password Changed!")
+
+    else:
+        # Show error message
+        messagebox.showerror("Error", "User not found!")
 
     # Close cursor and connection
     cursor.close()
     connection.close()
 
-    # Show success message
-    messagebox.showinfo("Update", "Password Changed!")
-
     clear()
-
 ################################################################
 
 image_frame = customtkinter.CTkFrame(window, fg_color=(framebg))
