@@ -54,7 +54,7 @@ def logout_action():
 label = Label(root, text='Main Menu', width=10, font='Helvetica 15 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
-logout_button = customtkinter.CTkButton(label, text='Logout', width=10, fg_color=('white', framebg), command=confirm_logout)
+logout_button = customtkinter.CTkButton(label, text='Logout', width=10, fg_color=(framebg), command=confirm_logout)
 logout_button.pack(side=TOP, anchor='e', pady=10, padx=10)
 
 frame = customtkinter.CTkFrame(root, fg_color=(framebg), corner_radius=5)

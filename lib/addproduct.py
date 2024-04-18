@@ -463,7 +463,7 @@ search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 
 # search box
 Search = StringVar()
-search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
+search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=(framebg))
 search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
@@ -545,9 +545,9 @@ resetButton.grid(row=8, column=2, padx=10, pady=10)
 imageFrame = customtkinter.CTkFrame(root, fg_color=('white', framebg), corner_radius=0)
 imageFrame.pack(side=TOP, anchor="center")
 
-customtkinter.CTkLabel(imageFrame, text="Product Image", fg_color=('white', framebg)).grid(row=0, column=1, padx=10, pady=10, sticky="we")
+customtkinter.CTkLabel(imageFrame, text="Product Image", fg_color=(framebg)).grid(row=0, column=1, padx=10, pady=10, sticky="we")
 
-f = customtkinter.CTkFrame(imageFrame, fg_color=('white', buttonsbg))
+f = customtkinter.CTkFrame(imageFrame, fg_color=(buttonsbg))
 f.grid(row=1, column=1, padx=20, pady=0, sticky='we')
 
 lbl = Label(f, bg='#704214')
@@ -558,7 +558,7 @@ uploadButton.grid(row=3, column=1, padx=10, pady=10)
 
 ########################################################################
 
-buttonFrame = customtkinter.CTkFrame(root,fg_color=('white', framebg), corner_radius=0)
+buttonFrame = customtkinter.CTkFrame(root,fg_color=(framebg), corner_radius=0)
 buttonFrame.pack(side=BOTTOM, anchor="n")
 
 saveButton = customtkinter.CTkButton(buttonFrame, text='Save', fg_color=('#704214'), command=Save)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Save, border=0)

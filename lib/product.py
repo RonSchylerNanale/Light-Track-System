@@ -418,7 +418,7 @@ def display_cart():
 
      # Check if cart_items is empty
     if not cart_items:
-        customtkinter.CTkLabel(cart_window, text="No items added", fg_color=('white', framebg)).pack(padx=10, pady=10)
+        customtkinter.CTkLabel(cart_window, text="No items added", fg_color=(framebg)).pack(padx=10, pady=10)
 
     # Define a function to handle checkout
     def checkout(registration_number, product_data, amount_ordered, price):
@@ -705,7 +705,7 @@ def select_product_for_order(data):
     if data:
         # Create a new Frame widget to display product details
         global obj
-        obj = customtkinter.CTkFrame(root, fg_color=("white", framebg), border_width=0, border_color=framebg, corner_radius=0)
+        obj = customtkinter.CTkFrame(root, fg_color=(framebg), border_width=0, border_color=framebg, corner_radius=0)
         obj.pack(side=TOP, anchor="nw", padx=0, pady=10)
 
         # Labels for database fields
@@ -858,7 +858,7 @@ def show_restock_list():
             restock_label.pack(padx=5, pady=5)
         else:
             restock_list = "\n".join([product[0] for product in products_to_restock])
-            restock_label = customtkinter.CTkLabel(window, text=f"These products need to be restocked:\n\n{restock_list}", fg_color=('white', 'red'))
+            restock_label = customtkinter.CTkLabel(window, text=f"These products need to be restocked:\n\n{restock_list}", fg_color=('red'))
             restock_label.pack(padx=5, pady=5)
 
         conn.close()
@@ -919,7 +919,7 @@ restock_button.pack(side=RIGHT, padx=10, pady=5, anchor="e")
 
 # search box
 Search = StringVar()
-search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
+search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=(framebg))
 search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
