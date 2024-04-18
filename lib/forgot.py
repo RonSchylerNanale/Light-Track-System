@@ -200,9 +200,9 @@ confirmpad.grid(row=9, column=0, pady=5)
 
 #################################################################
 
-customtkinter.CTkButton(frame, text='Sign up', fg_color=('white', buttonsbg), command=change).grid(row=10, column=0, columnspan=2, pady=5)
+customtkinter.CTkButton(frame, text='Sign up', fg_color=(buttonsbg), command=change).grid(row=10, column=0, columnspan=2, pady=5)
 
-customtkinter.CTkButton(frame, text=' Back to Login', fg_color=('white', framebg), command=open_signin).grid(row=11, column=0, columnspan=2, pady=5)
+customtkinter.CTkButton(frame, text=' Back to Login', fg_color=(framebg), command=open_signin).grid(row=11, column=0, columnspan=2, pady=5)
 
 
 window.mainloop()

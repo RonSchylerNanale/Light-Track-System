@@ -533,10 +533,11 @@ Supplier = StringVar()
 supply_entry = Entry(obj, textvariable=Supplier, width=20, font='Helvetica 10 bold', bg='white')
 supply_entry.grid(row=6, column=2, padx=10, pady=10)
 
-updateButton = customtkinter.CTkButton(obj, text='Update', fg_color=('white', buttonsbg), command= Update)
+updateButton = customtkinter.CTkButton(obj, text='Update', fg_color=(buttonsbg), command= Update)
 updateButton.grid(row=8, column=0, padx=10, pady=10)
 
-resetButton = customtkinter.CTkButton(obj, text='Clear', fg_color=("white", '#704214'), command=clear)
+resetButton = customtkinter.CTkButton(obj, text='Clear', fg_color=(
+    '#704214'), command=clear)
 resetButton.grid(row=8, column=2, padx=10, pady=10)
 
 ################################################
@@ -552,7 +553,7 @@ f.grid(row=1, column=1, padx=20, pady=0, sticky='we')
 lbl = Label(f, bg='#704214')
 lbl.place(x=5, y=5)
 
-uploadButton = customtkinter.CTkButton(imageFrame, text='Upload Photo', fg_color=('white', buttonsbg), command=show_image)
+uploadButton = customtkinter.CTkButton(imageFrame, text='Upload Photo', fg_color=(buttonsbg), command=show_image)
 uploadButton.grid(row=3, column=1, padx=10, pady=10)
 
 ########################################################################
@@ -560,10 +561,10 @@ uploadButton.grid(row=3, column=1, padx=10, pady=10)
 buttonFrame = customtkinter.CTkFrame(root,fg_color=('white', framebg), corner_radius=0)
 buttonFrame.pack(side=BOTTOM, anchor="n")
 
-saveButton = customtkinter.CTkButton(buttonFrame, text='Save', fg_color=("white", '#704214'), command=Save)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Save, border=0)
+saveButton = customtkinter.CTkButton(buttonFrame, text='Save', fg_color=('#704214'), command=Save)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Save, border=0)
 saveButton.grid(row=1, column=2, padx=10, pady=10)
 
-exitButton = customtkinter.CTkButton(buttonFrame, text='Done', fg_color=("white", '#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
+exitButton = customtkinter.CTkButton(buttonFrame, text='Done', fg_color=('#704214'), command=Exit)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=Exit, border=0)
 exitButton.grid(row=1, column=4, padx=10, pady=10)
 
 

@@ -382,7 +382,7 @@ def submit_order(product_data, registration_number, product_name):
     price_entry.grid(row=2, column=1, padx=5, pady=5)
 
     # Add a button to submit the order
-    submit_button = customtkinter.CTkButton(order_window, text="Add to Cart", fg_color=('white', buttonsbg), command=submit_order)
+    submit_button = customtkinter.CTkButton(order_window, text="Add to Cart", fg_color=(buttonsbg), command=submit_order)
     submit_button.grid(row=3, columnspan=2, padx=0, pady=5)
 
     # Make amount_entry accessible within the function
@@ -466,7 +466,7 @@ def display_cart():
         item_label = customtkinter.CTkLabel(item_frame, text=f"Item {idx+1}: {item['product_name']} - Quantity: {item['amount_ordered']} - Price: {item['price']}", fg_color=('white', framebg))
         item_label.pack(side=LEFT)
 
-        remove_button = customtkinter.CTkButton(item_frame, text="Remove", width=10, fg_color=('white', 'red'),command=lambda i=item: remove_item_from_cart(i))
+        remove_button = customtkinter.CTkButton(item_frame, text="Remove", width=10, fg_color=('red'),command=lambda i=item: remove_item_from_cart(i))
         remove_button.pack(side=RIGHT)
 
     def checkout_all():
@@ -507,7 +507,7 @@ def display_cart():
 
 
     # Add a single Checkout button for all items
-    submit_button = customtkinter.CTkButton(cart_window, text="Checkout", fg_color=("white", buttonsbg), command=checkout_all)
+    submit_button = customtkinter.CTkButton(cart_window, text="Checkout", fg_color=(buttonsbg), command=checkout_all)
     submit_button.pack(side=BOTTOM, padx=10, pady=10)
 
 #################################################################
@@ -610,7 +610,7 @@ def update_product(data):
 
 
     # Button to confirm the update
-    confirm_button = customtkinter.CTkButton(update_window, text="Update", fg_color=("white", buttonsbg), command=confirm_update)
+    confirm_button = customtkinter.CTkButton(update_window, text="Update", fg_color=(buttonsbg), command=confirm_update)
     confirm_button.grid(row=len(update_labels), columnspan=2, pady=10)
 
     entry_fields = [entry for entry in update_window.children.values() if isinstance(entry, Entry)]
@@ -726,23 +726,23 @@ def select_product_for_order(data):
         button_frame.grid(row=rows, column=0, columnspan=3, padx=10, pady=10)
 
         # Button to select the product for making orders
-        add_to_cart_button = customtkinter.CTkButton(button_frame,text="Add to Cart", fg_color=("white", '#704214'), command=lambda: submit_order(data, registration_number, product_name))
+        add_to_cart_button = customtkinter.CTkButton(button_frame,text="Add to Cart", fg_color=('#704214'), command=lambda: submit_order(data, registration_number, product_name))
         add_to_cart_button.grid(row=0, column=0, pady=5, padx=(0, 5))
 
         # Button to archive the selected product
-        archive_button = customtkinter.CTkButton(button_frame, text="Archive", fg_color=("white", '#FF5733'), command=lambda: archive_product(data))
+        archive_button = customtkinter.CTkButton(button_frame, text="Archive", fg_color=('#FF5733'), command=lambda: archive_product(data))
         archive_button.grid(row=0, column=1, pady=5, padx=(0, 5))
 
         # Button to update the selected product
-        update_button = customtkinter.CTkButton(button_frame, text="Update", fg_color=("white", '#4287f5'), command=lambda: update_product(data))
+        update_button = customtkinter.CTkButton(button_frame, text="Update", fg_color=('#4287f5'), command=lambda: update_product(data))
         update_button.grid(row=1, column=0,pady=5, padx=(0, 5))
 
         # Button to restock the selected product
-        restock_button = customtkinter.CTkButton(button_frame, text="Restock", fg_color=("white", '#1E8449'), command=lambda: restock_product(data))
+        restock_button = customtkinter.CTkButton(button_frame, text="Restock", fg_color=('#1E8449'), command=lambda: restock_product(data))
         restock_button.grid(row=1, column=1,pady=5, padx=(0, 5))
 
         # Button to delete the selected product
-        delete_button = customtkinter.CTkButton(button_frame, text="Delete", fg_color=("white", '#FF5733'), command=lambda: delete_product(data))
+        delete_button = customtkinter.CTkButton(button_frame, text="Delete", fg_color=('#FF5733'), command=lambda: delete_product(data))
         delete_button.grid(row=2, column=0,pady=5, padx=(0, 5))
 
 
@@ -934,11 +934,11 @@ button_frame = customtkinter.CTkFrame(label, fg_color=("transparent"), corner_ra
 button_frame.pack(side="right", padx=10, pady=10)
 
 # Order History Button
-orderhistory_button = customtkinter.CTkButton(button_frame, text='Order History', command=orderlogs, fg_color=("white", framebg))
+orderhistory_button = customtkinter.CTkButton(button_frame, text='Order History', command=orderlogs, fg_color=(framebg))
 orderhistory_button.pack(side="right", padx=5)
 
 # Archive Button
-archive_button = customtkinter.CTkButton(button_frame, text='Archive', command=archive, fg_color=("white", framebg))
+archive_button = customtkinter.CTkButton(button_frame, text='Archive', command=archive, fg_color=(framebg))
 archive_button.pack(side="right", padx=5)
 
 #################################################################

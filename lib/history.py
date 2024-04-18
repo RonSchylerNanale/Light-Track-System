@@ -302,10 +302,10 @@ load_data()
 footer = Label(root,  width=10, font='Helvetica 10 bold', height=3, bg=framebg, fg="white", anchor=CENTER)
 footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
-export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", buttonsbg), command=export)
+export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=(buttonsbg), command=export)
 export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=("white", buttonsbg), command=lambda: export_to_excel(treeview))
+export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=(buttonsbg), command=lambda: export_to_excel(treeview))
 export_page_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 ###############################################################

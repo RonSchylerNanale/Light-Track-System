@@ -179,10 +179,10 @@ passpad = Frame(frame, width=150, height=2, bg='white')
 passpad.grid(row=7, column=0, pady=5)
 
 # Button for Sign in
-customtkinter.CTkButton(frame, text='Sign in', fg_color=('white', buttonsbg), command=signin).grid(row=8, column=0, columnspan=2, pady=5)
+customtkinter.CTkButton(frame, text='Sign in', fg_color=(buttonsbg), command=signin).grid(row=8, column=0, columnspan=2, pady=5)
 
 # Buttons for Create Account and Forgot Password
-customtkinter.CTkButton(frame, text='Create Account', fg_color=('white', framebg), command=open_signup).grid(row=9, column=0, columnspan=2, pady=5)
+customtkinter.CTkButton(frame, text='Create Account', fg_color=(framebg), command=open_signup).grid(row=9, column=0, columnspan=2, pady=5)
 
 
 window.mainloop()

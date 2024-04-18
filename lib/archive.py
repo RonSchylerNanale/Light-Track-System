@@ -350,7 +350,7 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
 
-unarchive_button = customtkinter.CTkButton(footer, text="Unarchive", fg_color=("white", '#704214'), command=unarchive)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=unarchive, border=0)
+unarchive_button = customtkinter.CTkButton(footer, text="Unarchive", fg_color=('#704214'), command=unarchive)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=unarchive, border=0)
 unarchive_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 ###############################################################

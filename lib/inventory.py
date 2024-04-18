@@ -345,13 +345,13 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
 
-export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", '#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
+export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=('#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
 export_db_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=("white", '#704214'), command=lambda: export_to_excel(treeview))#, width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
+export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=('#704214'), command=lambda: export_to_excel(treeview))#, width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
 export_page_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
-import_button = customtkinter.CTkButton(footer, text='Import', fg_color=("white", '#704214'), command=import_file)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=import_file, border=0)
+import_button = customtkinter.CTkButton(footer, text='Import', fg_color=('#704214'), command=import_file)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=import_file, border=0)
 import_button.pack(side=RIGHT, padx=5, pady=0, anchor="e")
 
 ###############################################################

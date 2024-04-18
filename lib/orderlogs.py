@@ -301,7 +301,7 @@ imageicon1 = PhotoImage(file='images/back_button.png')
 back_button = Button(label, image=imageicon1, bg='#704214', border=0, command=back)
 back_button.pack(side=LEFT, padx=10, pady=10, anchor="nw")
 
-refresh_button = customtkinter.CTkButton(label, text='Refresh', command=refresh_treeview, fg_color=("white", framebg))
+refresh_button = customtkinter.CTkButton(label, text='Refresh', command=refresh_treeview, fg_color=(framebg))
 refresh_button.pack(side=LEFT, padx=5, pady=0, anchor="e")
 
 ################################################################
@@ -353,10 +353,10 @@ footer.pack(side=BOTTOM, fill="x", anchor = "sw")
 
 # Export buttons
 
-export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=("white", '#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
+export_db_button = customtkinter.CTkButton(footer, text='Export Database', fg_color=('#704214'), command=export)#, width=15, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=export, border=0)
 export_db_button.pack(side="right", padx=5, pady=0, anchor="e")
 
-export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=("white", '#704214'), command=lambda: export_to_excel(treeview))#, width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
+export_page_button = customtkinter.CTkButton(footer, text='Export Current Page', fg_color=('#704214'), command=lambda: export_to_excel(treeview))#, width=17, height=2, font='Helvetica 10 bold', bg='#704214', fg='white', command=lambda: export_to_excel(treeview), border=0)
 export_page_button.pack(side="right", padx=5, pady=0, anchor="e")
 
 
