@@ -20,7 +20,6 @@ def create_tables():
     # Define SQL queries for creating tables
     create_table_users = """
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY,
             username VARCHAR(45) NOT NULL,
             password VARCHAR(45) NOT NULL
         )

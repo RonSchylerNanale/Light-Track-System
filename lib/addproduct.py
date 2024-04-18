@@ -260,11 +260,11 @@ def Save():
 
     except mysql.connector.Error as e:
         print("Error:", e)
-        messagebox.showerror("Error", "Failed to add product!")
+        messagebox.showerror("Error", "Failed to add product! Product Number already exists!")
 
     except tk.TclError as tcl_err:
         print("TclError:", tcl_err)
-        messagebox.showerror("Error", "Please enter only numbers for the Price and Quantity fields!")
+        messagebox.showerror("Error", "Please enter only numbers for the Price and Quantity fields!") 
 
     finally:
         if conn.is_connected():
