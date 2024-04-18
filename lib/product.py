@@ -881,7 +881,7 @@ check_quantity()
 #### HEADER ####
 
 # top frames
-label = Label(root, text='Product', width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
+label = Label(root, width=10, font='Helvetica 10 bold', height=3, bg="#704214", fg="white", anchor=CENTER)
 label.pack(side=TOP, fill="x", anchor = "nw")
 
 # Load the original images
@@ -916,6 +916,7 @@ view_cart_button.pack(side=RIGHT, padx=0, pady=5, anchor="e")
 
 restock_button = Button(label, image=imageicon6, bg='#704214', fg='white',command=show_restock_list, bd=0)
 restock_button.pack(side=RIGHT, padx=10, pady=5, anchor="e")
+
 
 # search box
 Search = StringVar()
