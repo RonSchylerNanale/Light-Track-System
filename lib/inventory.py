@@ -284,7 +284,7 @@ search_button.pack(side=RIGHT, padx=0, pady=10, anchor="e")
 
 # search box
 Search = StringVar()
-search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=("white", framebg))
+search_entry = customtkinter.CTkEntry(label, textvariable=Search, fg_color=(framebg))
 search_entry.default_text = 'Search'
 search_entry.insert(0, search_entry.default_text)
 search_entry.bind("<FocusIn>", on_enter)
