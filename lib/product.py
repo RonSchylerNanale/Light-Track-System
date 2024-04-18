@@ -722,7 +722,7 @@ def select_product_for_order(data):
             rows += 1
 
         # Create a frame for buttons
-        button_frame = customtkinter.CTkFrame(obj, fg_color=("white", framebg))
+        button_frame = customtkinter.CTkFrame(obj, fg_color=(framebg))
         button_frame.grid(row=rows, column=0, columnspan=3, padx=10, pady=10)
 
         # Button to select the product for making orders
