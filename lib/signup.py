@@ -52,7 +52,7 @@ def signup():
             cursor = conn.cursor()
 
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS accounts (
+            CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY,
                 username VARCHAR(45) NOT NULL,
                 password VARCHAR(45) NOT NULL
