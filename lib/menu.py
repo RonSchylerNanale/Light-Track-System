@@ -149,13 +149,13 @@ statsframe = customtkinter.CTkFrame(root, fg_color=(buttonsbg))
 statsframe.pack(padx=0, pady=0, fill="x", anchor="center")
 
 # Create labels
-total_sales_today_label = customtkinter.CTkLabel(statsframe, text="Total Sales Today: Php 0.00")
+total_sales_today_label = customtkinter.CTkLabel(statsframe, text="Total Sales Today: Php 0.00", fg_color=('white', buttonsbg))
 total_sales_today_label.grid(row=0, column=0, padx=10, pady=10)
 
-overall_sales_label = customtkinter.CTkLabel(statsframe, text="Overall Sales: Php 0.00")
+overall_sales_label = customtkinter.CTkLabel(statsframe, text="Overall Sales: Php 0.00", fg_color=('white', buttonsbg))
 overall_sales_label.grid(row=0, column=1, padx=10, pady=10)
 
-most_sold_item_label = customtkinter.CTkLabel(statsframe, text="Most Sold Item: N/A")
+most_sold_item_label = customtkinter.CTkLabel(statsframe, text="Most Sold Item: N/A", fg_color=('white', buttonsbg))
 most_sold_item_label.grid(row=0, column=2, padx=10, pady=10)
 
 # Center labels within statsframe
