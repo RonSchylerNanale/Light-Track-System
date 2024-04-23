@@ -373,16 +373,16 @@ def submit_order(product_data, registration_number, product_name):
     Label(order_window, text="Product Name:", bg=framebg, fg='white', font=custom_font).grid(row=0, column=0, padx=5, pady=5)
     Label(order_window, text=product_name, bg=framebg, fg='white', font=custom_font).grid(row=0, column=1, padx=5, pady=5)
 
-    Label(order_window, text="Amount Ordered:", bg=framebg, fg='white',font=custom_font).grid(row=1, column=0, padx=5, pady=5)
+    Label(order_window, text="Quantity Ordered:", bg=framebg, fg='white',font=custom_font).grid(row=1, column=0, padx=5, pady=5)
     amount_entry = Entry(order_window, font=custom_font, width=10)
     amount_entry.grid(row=1, column=1, padx=5, pady=5)
 
-    Label(order_window, text="Price:", bg=framebg, fg='white',font=custom_font).grid(row=2, column=0, padx=5, pady=5)
+    Label(order_window, text="Price Each:", bg=framebg, fg='white',font=custom_font).grid(row=2, column=0, padx=5, pady=5)
     price_entry = Entry(order_window, font=custom_font, width=10)
     price_entry.grid(row=2, column=1, padx=5, pady=5)
 
     # Add a button to submit the order
-    submit_button = customtkinter.CTkButton(order_window, text="Add to Cart", fg_color=(buttonsbg), command=submit_order)
+    submit_button = customtkinter.CTkButton(order_window, text="Order", fg_color=(buttonsbg), command=submit_order)
     submit_button.grid(row=3, columnspan=2, padx=0, pady=5)
 
     # Make amount_entry accessible within the function
@@ -726,7 +726,7 @@ def select_product_for_order(data):
         button_frame.grid(row=rows, column=0, columnspan=3, padx=10, pady=10)
 
         # Button to select the product for making orders
-        add_to_cart_button = customtkinter.CTkButton(button_frame,text="Add to Cart", fg_color=('#704214'), command=lambda: submit_order(data, registration_number, product_name))
+        add_to_cart_button = customtkinter.CTkButton(button_frame,text="Make Order", fg_color=('#704214'), command=lambda: submit_order(data, registration_number, product_name))
         add_to_cart_button.grid(row=0, column=0, pady=5, padx=(0, 5))
 
         # Button to archive the selected product
